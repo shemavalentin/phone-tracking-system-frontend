@@ -24,23 +24,19 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
   });
 
   useEffect(() => {
-    const incomingDeviceId = deviceDetails?.deviceId || "undefined";
-
     console.log("DeviceInfoPanel - trackedDeviceId:", trackedDeviceId);
     console.log("DeviceInfoPanel - deviceDetails:", deviceDetails);
-    console.log("DeviceInfoPanel - incomingDeviceId:", incomingDeviceId);
 
-    if (incomingDeviceId !== trackedDeviceId) {
+    if (deviceDetails && deviceDetails.deviceId !== trackedDeviceId) {
       console.warn(
-        `⚠️ DeviceInfoPanel: Mismatched data (Expected: ${trackedDeviceId}, Got: ${incomingDeviceId})`
+        `⚠️ DeviceInfoPanel: Mismatched data (Expected: ${trackedDeviceId}, Got: ${deviceDetails.deviceId})`
       );
     }
   }, [trackedDeviceId, deviceDetails]);
 
-  // Fallback for missing deviceId in production
-  const incomingDeviceId = deviceDetails?.deviceId || trackedDeviceId;
+  const incomingDeviceId = deviceDetails.deviceId || trackedDeviceId;
 
-  // Show fallback UI if no deviceDetails or if IDs mismatch
+  // Ensure deviceDetails is for the correct device
   if (!deviceDetails || incomingDeviceId !== trackedDeviceId) {
     return (
       <PanelContainer>
@@ -55,6 +51,7 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
     return <PanelContainer>Waiting for location updates...</PanelContainer>;
   }
 
+  // Extract movementSimulation details
   const movement = latestLocation.movementSimulation?.[0] || {};
   const {
     handoverData = null,
@@ -63,6 +60,7 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
   } = movement;
   const localBusinesses = latestLocation.localBusinesses || [];
 
+  // Toggle expandable sections
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
       ...prev,
@@ -76,7 +74,7 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
         <PanelHeader>DEVICE LOCATION DETAILS</PanelHeader>
         <PanelContent>
           <Section>
-            <strong>Device ID:</strong> {incomingDeviceId || "N/A"}
+            <strong>Device ID:</strong> {trackedDeviceId || "N/A"}
           </Section>
           <Section>
             <strong>Timestamp:</strong> {latestLocation.timestamp || "N/A"}
