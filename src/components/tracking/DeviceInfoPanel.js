@@ -24,18 +24,24 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
   });
 
   useEffect(() => {
+    const incomingDeviceId = deviceDetails?.deviceId || "undefined";
+
     console.log("DeviceInfoPanel - trackedDeviceId:", trackedDeviceId);
     console.log("DeviceInfoPanel - deviceDetails:", deviceDetails);
+    console.log("DeviceInfoPanel - incomingDeviceId:", incomingDeviceId);
 
-    if (deviceDetails && deviceDetails.deviceId !== trackedDeviceId) {
+    if (incomingDeviceId !== trackedDeviceId) {
       console.warn(
-        `⚠️ DeviceInfoPanel: Mismatched data (Expected: ${trackedDeviceId}, Got: ${deviceDetails.deviceId})`
+        `⚠️ DeviceInfoPanel: Mismatched data (Expected: ${trackedDeviceId}, Got: ${incomingDeviceId})`
       );
     }
   }, [trackedDeviceId, deviceDetails]);
 
-  // Ensure deviceDetails is for the correct device
-  if (!deviceDetails || deviceDetails.deviceId !== trackedDeviceId) {
+  // Fallback for missing deviceId in production
+  const incomingDeviceId = deviceDetails?.deviceId || trackedDeviceId;
+
+  // Show fallback UI if no deviceDetails or if IDs mismatch
+  if (!deviceDetails || incomingDeviceId !== trackedDeviceId) {
     return (
       <PanelContainer>
         No location data available for this device.
@@ -49,7 +55,6 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
     return <PanelContainer>Waiting for location updates...</PanelContainer>;
   }
 
-  // Extract movementSimulation details
   const movement = latestLocation.movementSimulation?.[0] || {};
   const {
     handoverData = null,
@@ -58,7 +63,6 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
   } = movement;
   const localBusinesses = latestLocation.localBusinesses || [];
 
-  // Toggle expandable sections
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
       ...prev,
@@ -72,7 +76,7 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
         <PanelHeader>DEVICE LOCATION DETAILS</PanelHeader>
         <PanelContent>
           <Section>
-            <strong>Device ID:</strong> {trackedDeviceId || "N/A"}
+            <strong>Device ID:</strong> {incomingDeviceId || "N/A"}
           </Section>
           <Section>
             <strong>Timestamp:</strong> {latestLocation.timestamp || "N/A"}
