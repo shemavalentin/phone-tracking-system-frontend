@@ -179,7 +179,7 @@ const LiveTracking = ({ isCollapsed }) => {
       {deviceDetails && (trackedDeviceId || identifier) ? (
         <DeviceInfoPanel
           trackedDeviceId={trackedDeviceId || identifier}
-          deviceDetails={deviceDetails}
+          deviceDeta={deviceDetails}
         />
       ) : (
         <Typography variant="body2" color="textSecondary">
