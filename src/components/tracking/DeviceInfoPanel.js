@@ -30,17 +30,29 @@ const DeviceInfoPanel = ({ deviceData }) => {
   const [expandedSections, setExpandedSections] = useState({});
   const [showMap, setShowMap] = useState(false);
 
-  if (!deviceData || !deviceData.latestLocation) {
-    console.log("DeviceInfoPanel received invalid data:", deviceData);
+  // ✅ PATCH: fallback if data is missing
+  if (!deviceData?.latestLocation) {
+    console.warn(
+      "DeviceInfoPanel received invalid or empty deviceData:",
+      deviceData
+    );
     return null;
   }
 
   const { latestLocation } = deviceData;
   const movement = latestLocation.movementSimulation?.[0] || {};
-  const { handoverData, readableLocation, computedDistances } = movement;
+  const {
+    handoverData = {},
+    readableLocation = {},
+    computedDistances = [],
+    connectedAnchor,
+  } = movement;
 
   const toggleExpand = (section) => {
-    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
   };
 
   return (
@@ -54,48 +66,45 @@ const DeviceInfoPanel = ({ deviceData }) => {
           </Section>
           <Section>
             <strong>Computed Device Coordinates:</strong> <br />
-            <br />* Latitude: {latestLocation.latitude || "N/A"}, <br />
-            <br />* Longitude: {latestLocation.longitude || "N/A"}
+            <br />* Latitude: {latestLocation.latitude ?? "N/A"}
+            <br />* Longitude: {latestLocation.longitude ?? "N/A"}
           </Section>
           <Section>
-            <strong>Connected Anchor:</strong>{" "}
-            {movement.connectedAnchor || "N/A"}
+            <strong>Connected Anchor:</strong> {connectedAnchor || "N/A"}
           </Section>
 
-          {/* Handover Data */}
-          {handoverData && (
+          {/* Handover Section */}
+          {handoverData?.handoverTime && (
             <ExpandableContent
               title="Handover Data"
               isExpanded={expandedSections.handover}
               toggleExpand={() => toggleExpand("handover")}
             >
               <Section>
-                <strong>Source Anchor:</strong> <br />
-                <br />* Tower ID:
-                {handoverData.sourceAnchor?.id || "N/A"}, <br />* Latitude:
-                {handoverData.sourceAnchor?.latitude || "N/A"}, <br />*
-                Longitude: {handoverData.sourceAnchor?.longitude || "N/A"},{" "}
-                <br />* RSSI:
-                {handoverData.sourceAnchor?.rssi || "N/A"}
+                <strong>Source Anchor:</strong>
+                <br />* Tower ID: {handoverData.sourceAnchor?.id ?? "N/A"}
+                <br />* Latitude: {handoverData.sourceAnchor?.latitude ?? "N/A"}
+                <br />* Longitude:{" "}
+                {handoverData.sourceAnchor?.longitude ?? "N/A"}
+                <br />* RSSI: {handoverData.sourceAnchor?.rssi ?? "N/A"}
               </Section>
               <Section>
-                <strong>Target Anchor:</strong> <br /> <br />* Tower ID:
-                {handoverData.targetAnchor?.id || "N/A"}, <br />* Latitude:{" "}
-                {handoverData.targetAnchor?.latitude || "N/A"}, <br />*
-                Longitude: {handoverData.targetAnchor?.longitude || "N/A"},{" "}
-                <br />* RSSI: {handoverData.targetAnchor?.rssi || "N/A"}
+                <strong>Target Anchor:</strong>
+                <br />* Tower ID: {handoverData.targetAnchor?.id ?? "N/A"}
+                <br />* Latitude: {handoverData.targetAnchor?.latitude ?? "N/A"}
+                <br />* Longitude:{" "}
+                {handoverData.targetAnchor?.longitude ?? "N/A"}
+                <br />* RSSI: {handoverData.targetAnchor?.rssi ?? "N/A"}
               </Section>
               <Section>
                 <strong>Handover Time:</strong>{" "}
-                {handoverData.handoverTime
-                  ? new Date(handoverData.handoverTime).toLocaleString()
-                  : "N/A"}
+                {new Date(handoverData.handoverTime).toLocaleString()}
               </Section>
             </ExpandableContent>
           )}
 
           {/* Readable Location */}
-          {readableLocation && (
+          {readableLocation?.formattedAddress && (
             <ExpandableContent
               title="Location Details"
               isExpanded={expandedSections.location}
@@ -103,54 +112,52 @@ const DeviceInfoPanel = ({ deviceData }) => {
             >
               <Section>
                 <strong>Formatted Address:</strong>{" "}
-                {readableLocation.formattedAddress || "N/A"}
+                {readableLocation.formattedAddress}
               </Section>
               <Section>
-                <strong>Country:</strong> {readableLocation.country || "N/A"}
+                <strong>Country:</strong> {readableLocation.country ?? "N/A"}
               </Section>
               <Section>
-                <strong>State:</strong> {readableLocation.state || "N/A"}
+                <strong>State:</strong> {readableLocation.state ?? "N/A"}
               </Section>
               <Section>
-                <strong>District:</strong> {readableLocation.district || "N/A"}
+                <strong>District:</strong> {readableLocation.district ?? "N/A"}
               </Section>
               <Section>
-                <strong>Sector:</strong> {readableLocation.sector || "N/A"}
+                <strong>Sector:</strong> {readableLocation.sector ?? "N/A"}
               </Section>
               <Section>
-                <strong>Cell:</strong> {readableLocation.cell || "N/A"}
+                <strong>Cell:</strong> {readableLocation.cell ?? "N/A"}
               </Section>
               <Section>
-                <strong>Village:</strong> {readableLocation.village || "N/A"}
+                <strong>Village:</strong> {readableLocation.village ?? "N/A"}
               </Section>
               <Section>
-                <strong>Timezone:</strong> {readableLocation.timezone || "N/A"}
+                <strong>Timezone:</strong> {readableLocation.timezone ?? "N/A"}
               </Section>
             </ExpandableContent>
           )}
 
-          {/* Nearby Businesses */}
+          {/* Local Businesses */}
           {readableLocation?.localBusinesses?.length > 0 && (
             <ExpandableContent
               title="Nearby Businesses"
               isExpanded={expandedSections.businesses}
               toggleExpand={() => toggleExpand("businesses")}
             >
-              <Section>
-                <BusinessList>
-                  {readableLocation.localBusinesses.map((business) => (
-                    <BusinessItem key={business._id}>
-                      <strong>{business.name}</strong> - {business.address} (
-                      {business.types})
-                    </BusinessItem>
-                  ))}
-                </BusinessList>
-              </Section>
+              <BusinessList>
+                {readableLocation.localBusinesses.map((business, index) => (
+                  <BusinessItem key={business._id || index}>
+                    <strong>{business.name}</strong> - {business.address} (
+                    {business.types})
+                  </BusinessItem>
+                ))}
+              </BusinessList>
             </ExpandableContent>
           )}
 
           {/* Computed Distances */}
-          {computedDistances?.length > 0 && (
+          {computedDistances.length > 0 && (
             <ExpandableContent
               title="Computed Distances"
               isExpanded={expandedSections.distances}
@@ -158,15 +165,15 @@ const DeviceInfoPanel = ({ deviceData }) => {
             >
               {computedDistances.map((dist, index) => (
                 <Section key={index}>
-                  * Latitude: {dist.latitude || "N/A"},
-                  <br />* Longitude: {dist.longitude || "N/A"} <br />* Distance
-                  from tower to Device: {dist.distance || "N/A"} Meters
+                  * Latitude: {dist.latitude ?? "N/A"}
+                  <br />* Longitude: {dist.longitude ?? "N/A"}
+                  <br />* Distance: {dist.distance ?? "N/A"} Meters
                 </Section>
               ))}
             </ExpandableContent>
           )}
 
-          {/* View on Map Button */}
+          {/* View on Map */}
           <ViewMapButton onClick={() => setShowMap(true)}>
             View on Map
           </ViewMapButton>
