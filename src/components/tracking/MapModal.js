@@ -1,9 +1,5 @@
 // MapModal.js
-<<<<<<< HEAD
-import React, { useState } from "react";
-=======
 import React, { useState, useEffect } from "react";
->>>>>>> 7da024d (Change API url from local host to production)
 import GoogleMapView from "./GoogleMapView"; // Ensure correct path
 import {
   ModalOverlay,
@@ -15,14 +11,11 @@ import {
 
 const MapModal = ({ latitude, longitude, onClose }) => {
   const [isMaximized, setIsMaximized] = useState(false);
-<<<<<<< HEAD
-=======
   const [coords, setCoords] = useState({ latitude, longitude });
 
   useEffect(() => {
     setCoords({ latitude, longitude });
   }, [latitude, longitude]);
->>>>>>> 7da024d (Change API url from local host to production)
 
   return (
     <ModalOverlay>
