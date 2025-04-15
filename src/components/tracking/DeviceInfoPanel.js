@@ -34,10 +34,8 @@ const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
     }
   }, [trackedDeviceId, deviceDetails]);
 
-  const incomingDeviceId = deviceDetails.deviceId || trackedDeviceId;
-
   // Ensure deviceDetails is for the correct device
-  if (!deviceDetails || incomingDeviceId !== trackedDeviceId) {
+  if (!deviceDetails || deviceDetails.deviceId !== trackedDeviceId) {
     return (
       <PanelContainer>
         No location data available for this device.
