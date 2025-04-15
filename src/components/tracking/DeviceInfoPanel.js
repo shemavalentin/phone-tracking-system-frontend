@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PanelContainer,
   PanelHeader,
@@ -10,45 +10,58 @@ import {
   BusinessItem,
   ViewMapButton,
 } from "../../styles/DeviceInfoPanel.styles";
-import { FaChevronDown } from "react-icons/fa";
+
 import MapModal from "../tracking/MapModal";
 
-const ExpandableContent = ({ title, isExpanded, toggleExpand, children }) => (
-  <ExpandableSection>
-    <ExpandableButton
-      onClick={toggleExpand}
-      className={isExpanded ? "expanded" : ""}
-    >
-      {title}
-      <FaChevronDown className={`icon ${isExpanded ? "rotated" : ""}`} />
-    </ExpandableButton>
-    {isExpanded && <div>{children}</div>}
-  </ExpandableSection>
-);
-
-const DeviceInfoPanel = ({ deviceData }) => {
-  const [expandedSections, setExpandedSections] = useState({});
+const DeviceInfoPanel = ({ trackedDeviceId, deviceDetails }) => {
   const [showMap, setShowMap] = useState(false);
 
-  // ✅ PATCH: fallback if data is missing
-  if (!deviceData?.latestLocation) {
-    console.warn(
-      "DeviceInfoPanel received invalid or empty deviceData:",
-      deviceData
+  const [expandedSections, setExpandedSections] = useState({
+    handover: false,
+    locationDetails: false,
+    businesses: false,
+    computedDistances: false,
+  });
+
+  useEffect(() => {
+    console.log("DeviceInfoPanel - trackedDeviceId:", trackedDeviceId);
+    console.log("DeviceInfoPanel - deviceDetails:", deviceDetails);
+
+    if (deviceDetails && deviceDetails.deviceId !== trackedDeviceId) {
+      console.warn(
+        `⚠️ DeviceInfoPanel: Mismatched data (Expected: ${trackedDeviceId}, Got: ${deviceDetails.deviceId})`
+      );
+    }
+  }, [trackedDeviceId, deviceDetails]);
+
+  const incomingDeviceId = deviceDetails.deviceId || trackedDeviceId;
+
+  // Ensure deviceDetails is for the correct device
+  if (!deviceDetails || incomingDeviceId !== trackedDeviceId) {
+    return (
+      <PanelContainer>
+        No location data available for this device.
+      </PanelContainer>
     );
-    return null;
   }
 
-  const { latestLocation } = deviceData;
+  const { latestLocation } = deviceDetails;
+
+  if (!latestLocation) {
+    return <PanelContainer>Waiting for location updates...</PanelContainer>;
+  }
+
+  // Extract movementSimulation details
   const movement = latestLocation.movementSimulation?.[0] || {};
   const {
-    handoverData = {},
+    handoverData = null,
     readableLocation = {},
     computedDistances = [],
-    connectedAnchor,
   } = movement;
+  const localBusinesses = latestLocation.localBusinesses || [];
 
-  const toggleExpand = (section) => {
+  // Toggle expandable sections
+  const toggleSection = (section) => {
     setExpandedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
@@ -61,125 +74,130 @@ const DeviceInfoPanel = ({ deviceData }) => {
         <PanelHeader>DEVICE LOCATION DETAILS</PanelHeader>
         <PanelContent>
           <Section>
+            <strong>Device ID:</strong> {trackedDeviceId || "N/A"}
+          </Section>
+          <Section>
+            <strong>Timestamp:</strong> {latestLocation.timestamp || "N/A"}
+          </Section>
+          <Section>
             <strong>Status:</strong>{" "}
             {latestLocation.movementStatusMessage || "N/A"}
           </Section>
           <Section>
-            <strong>Computed Device Coordinates:</strong> <br />
-            <br />* Latitude: {latestLocation.latitude ?? "N/A"}
-            <br />* Longitude: {latestLocation.longitude ?? "N/A"}
+            <strong>Coordinates:</strong> {latestLocation.latitude || "N/A"},{" "}
+            {latestLocation.longitude || "N/A"}
           </Section>
           <Section>
-            <strong>Connected Anchor:</strong> {connectedAnchor || "N/A"}
+            <strong>Connected Anchor:</strong>{" "}
+            {latestLocation.connectedAnchor || "N/A"}
           </Section>
 
-          {/* Handover Section */}
-          {handoverData?.handoverTime && (
-            <ExpandableContent
-              title="Handover Data"
-              isExpanded={expandedSections.handover}
-              toggleExpand={() => toggleExpand("handover")}
-            >
-              <Section>
-                <strong>Source Anchor:</strong>
-                <br />* Tower ID: {handoverData.sourceAnchor?.id ?? "N/A"}
-                <br />* Latitude: {handoverData.sourceAnchor?.latitude ?? "N/A"}
-                <br />* Longitude:{" "}
-                {handoverData.sourceAnchor?.longitude ?? "N/A"}
-                <br />* RSSI: {handoverData.sourceAnchor?.rssi ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>Target Anchor:</strong>
-                <br />* Tower ID: {handoverData.targetAnchor?.id ?? "N/A"}
-                <br />* Latitude: {handoverData.targetAnchor?.latitude ?? "N/A"}
-                <br />* Longitude:{" "}
-                {handoverData.targetAnchor?.longitude ?? "N/A"}
-                <br />* RSSI: {handoverData.targetAnchor?.rssi ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>Handover Time:</strong>{" "}
-                {new Date(handoverData.handoverTime).toLocaleString()}
-              </Section>
-            </ExpandableContent>
+          {/* Handover Data */}
+          {handoverData && (
+            <ExpandableSection>
+              <ExpandableButton onClick={() => toggleSection("handover")}>
+                Handover Data {expandedSections.handover ? "▲" : "▼"}
+              </ExpandableButton>
+              {expandedSections.handover && (
+                <div>
+                  <Section>
+                    <strong>Source Anchor:</strong>{" "}
+                    {handoverData.sourceAnchor?.id || "N/A"}
+                  </Section>
+                  <Section>
+                    <strong>Target Anchor:</strong>{" "}
+                    {handoverData.targetAnchor?.id || "N/A"}
+                  </Section>
+                  <Section>
+                    <strong>Handover Time:</strong>{" "}
+                    {handoverData.handoverTime || "N/A"}
+                  </Section>
+                </div>
+              )}
+            </ExpandableSection>
           )}
 
           {/* Readable Location */}
-          {readableLocation?.formattedAddress && (
-            <ExpandableContent
-              title="Location Details"
-              isExpanded={expandedSections.location}
-              toggleExpand={() => toggleExpand("location")}
-            >
-              <Section>
-                <strong>Formatted Address:</strong>{" "}
-                {readableLocation.formattedAddress}
-              </Section>
-              <Section>
-                <strong>Country:</strong> {readableLocation.country ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>State:</strong> {readableLocation.state ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>District:</strong> {readableLocation.district ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>Sector:</strong> {readableLocation.sector ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>Cell:</strong> {readableLocation.cell ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>Village:</strong> {readableLocation.village ?? "N/A"}
-              </Section>
-              <Section>
-                <strong>Timezone:</strong> {readableLocation.timezone ?? "N/A"}
-              </Section>
-            </ExpandableContent>
+          {readableLocation && Object.keys(readableLocation).length > 0 && (
+            <ExpandableSection>
+              <ExpandableButton
+                onClick={() => toggleSection("locationDetails")}
+              >
+                Readable Location {expandedSections.locationDetails ? "▲" : "▼"}
+              </ExpandableButton>
+              {expandedSections.locationDetails && (
+                <div>
+                  <Section>
+                    <strong>Address:</strong>{" "}
+                    {readableLocation.formattedAddress || "N/A"}
+                  </Section>
+                  <Section>
+                    <strong>City:</strong> {readableLocation.city || "N/A"}
+                  </Section>
+                  <Section>
+                    <strong>State:</strong> {readableLocation.state || "N/A"}
+                  </Section>
+                  <Section>
+                    <strong>Country:</strong>{" "}
+                    {readableLocation.country || "N/A"}
+                  </Section>
+                </div>
+              )}
+            </ExpandableSection>
           )}
 
-          {/* Local Businesses */}
-          {readableLocation?.localBusinesses?.length > 0 && (
-            <ExpandableContent
-              title="Nearby Businesses"
-              isExpanded={expandedSections.businesses}
-              toggleExpand={() => toggleExpand("businesses")}
-            >
-              <BusinessList>
-                {readableLocation.localBusinesses.map((business, index) => (
-                  <BusinessItem key={business._id || index}>
-                    <strong>{business.name}</strong> - {business.address} (
-                    {business.types})
-                  </BusinessItem>
-                ))}
-              </BusinessList>
-            </ExpandableContent>
+          {/* Nearby Businesses */}
+          {localBusinesses.length > 0 && (
+            <ExpandableSection>
+              <ExpandableButton onClick={() => toggleSection("businesses")}>
+                Nearby Businesses {expandedSections.businesses ? "▲" : "▼"}
+              </ExpandableButton>
+              {expandedSections.businesses && (
+                <BusinessList>
+                  {localBusinesses.map((business, index) => (
+                    <BusinessItem key={index}>
+                      <strong>{business.name}</strong>
+                      <p>{business.address}</p>
+                      <p>Type: {business.types?.join(", ") || "N/A"}</p>
+                    </BusinessItem>
+                  ))}
+                </BusinessList>
+              )}
+            </ExpandableSection>
           )}
 
           {/* Computed Distances */}
           {computedDistances.length > 0 && (
-            <ExpandableContent
-              title="Computed Distances"
-              isExpanded={expandedSections.distances}
-              toggleExpand={() => toggleExpand("distances")}
-            >
-              {computedDistances.map((dist, index) => (
-                <Section key={index}>
-                  * Latitude: {dist.latitude ?? "N/A"}
-                  <br />* Longitude: {dist.longitude ?? "N/A"}
-                  <br />* Distance: {dist.distance ?? "N/A"} Meters
-                </Section>
-              ))}
-            </ExpandableContent>
+            <ExpandableSection>
+              <ExpandableButton
+                onClick={() => toggleSection("computedDistances")}
+              >
+                Computed Distances{" "}
+                {expandedSections.computedDistances ? "▲" : "▼"}
+              </ExpandableButton>
+              {expandedSections.computedDistances && (
+                <div>
+                  {computedDistances.map((distance, index) => (
+                    <Section key={index}>
+                      <strong>Anchor:</strong> {distance.anchor || "N/A"}
+                      <br />
+                      <strong>Distance:</strong>{" "}
+                      {distance.distance?.toFixed(2) || "N/A"} meters
+                    </Section>
+                  ))}
+                </div>
+              )}
+            </ExpandableSection>
           )}
 
-          {/* View on Map */}
+          {/* View on Map Button */}
           <ViewMapButton onClick={() => setShowMap(true)}>
             View on Map
           </ViewMapButton>
         </PanelContent>
       </PanelContainer>
 
+      {/* Map Modal */}
       {showMap && (
         <MapModal
           latitude={latestLocation.latitude}
