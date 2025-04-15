@@ -30,7 +30,6 @@ const DeviceInfoPanel = ({ deviceData }) => {
   const [expandedSections, setExpandedSections] = useState({});
   const [showMap, setShowMap] = useState(false);
 
-  // ✅ PATCH: fallback if data is missing
   if (!deviceData?.latestLocation) {
     console.warn(
       "DeviceInfoPanel received invalid or empty deviceData:",
@@ -64,16 +63,18 @@ const DeviceInfoPanel = ({ deviceData }) => {
             <strong>Status:</strong>{" "}
             {latestLocation.movementStatusMessage || "N/A"}
           </Section>
+
           <Section>
-            <strong>Computed Device Coordinates:</strong> <br />
+            <strong>Computed Device Coordinates:</strong>
+            <br />
             <br />* Latitude: {latestLocation.latitude ?? "N/A"}
             <br />* Longitude: {latestLocation.longitude ?? "N/A"}
           </Section>
+
           <Section>
             <strong>Connected Anchor:</strong> {connectedAnchor || "N/A"}
           </Section>
 
-          {/* Handover Section */}
           {handoverData?.handoverTime && (
             <ExpandableContent
               title="Handover Data"
@@ -103,7 +104,6 @@ const DeviceInfoPanel = ({ deviceData }) => {
             </ExpandableContent>
           )}
 
-          {/* Readable Location */}
           {readableLocation?.formattedAddress && (
             <ExpandableContent
               title="Location Details"
@@ -138,7 +138,6 @@ const DeviceInfoPanel = ({ deviceData }) => {
             </ExpandableContent>
           )}
 
-          {/* Local Businesses */}
           {readableLocation?.localBusinesses?.length > 0 && (
             <ExpandableContent
               title="Nearby Businesses"
@@ -156,7 +155,6 @@ const DeviceInfoPanel = ({ deviceData }) => {
             </ExpandableContent>
           )}
 
-          {/* Computed Distances */}
           {computedDistances.length > 0 && (
             <ExpandableContent
               title="Computed Distances"
@@ -173,7 +171,6 @@ const DeviceInfoPanel = ({ deviceData }) => {
             </ExpandableContent>
           )}
 
-          {/* View on Map */}
           <ViewMapButton onClick={() => setShowMap(true)}>
             View on Map
           </ViewMapButton>
