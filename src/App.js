@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import LiveTracking from "./pages/LiveTracking";
@@ -6,6 +6,7 @@ import Dashboard from "./components/home/Dashboard";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import Notification from "./components/common/Notification";
+import { connectSocket, closeWebSocket } from "./services/socketService";
 
 const App = () => {
   const [notification, setNotification] = useState({
@@ -14,6 +15,20 @@ const App = () => {
     severity: "info",
   });
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (token) {
+      connectSocket(token);
+      console.log("[WebSocket] Socket connected on App Load.");
+    }
+
+    return () => {
+      console.log("[WebSocket] Cleanup on unmount.");
+      closeWebSocket(); // Close connection on app unmount
+    };
+  }, []);
 
   const showNotification = (message, severity = "info") => {
     setNotification({ open: true, message, severity });
@@ -25,7 +40,6 @@ const App = () => {
 
   return (
     <Router>
-      {/* Layout manages sidebar collapsing */}
       <Layout isCollapsed={isCollapsed} toggleSidebar={toggleSidebar}>
         <Routes>
           <Route
@@ -52,7 +66,6 @@ const App = () => {
         </Routes>
       </Layout>
 
-      {/* Global notification system */}
       <Notification
         open={notification.open}
         message={notification.message}

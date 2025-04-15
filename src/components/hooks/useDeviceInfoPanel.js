@@ -30,7 +30,7 @@ const useDeviceInfo = (identifier) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/locations/getLiveLocation`,
+          `https://livetracking-system.onrender.com/api/locations/getLiveLocation`,
           {
             params: { [paramType]: identifier }, // Correctly pass imei/msisdn
           }

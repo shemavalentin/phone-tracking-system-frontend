@@ -49,29 +49,16 @@ export const ExpandableSection = styled.div`
 `;
 
 export const ExpandableButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
   background: none;
   border: none;
-  color: #29465b;
+  color: #007bff;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  padding: 8px;
-  transition: color 0.3s ease-in-out;
-
+  padding: 6px;
+  text-decoration: underline;
   &:hover {
     color: #0056b3;
-  }
-
-  .icon {
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .rotated {
-    transform: rotate(180deg);
   }
 `;
 

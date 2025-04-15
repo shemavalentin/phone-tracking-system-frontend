@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import GoogleMapView from "../components/tracking/GoogleMapView";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
@@ -9,15 +8,20 @@ import { isValidIMEI, isValidMSISDN } from "../utils/Validators";
 import {
   StyledContainer,
   FormWrapper,
-  MapContainer,
   StyledTextField,
   StyledButton,
+  MapContainer,
 } from "../styles/LiveTracking.styles";
+import {
+  subscribeToDevice,
+  unsubscribeFromDevice,
+} from "../services/socketService";
 
 const LiveTracking = ({ isCollapsed }) => {
   const [identifier, setIdentifier] = useState("");
   const [error, setError] = useState("");
-  const [location, setLocation] = useState(null);
+  const [trackedDeviceId, setTrackedDeviceId] = useState(null);
+  const [deviceDetails, setDeviceDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isValid, setIsValid] = useState(false);
@@ -28,61 +32,85 @@ const LiveTracking = ({ isCollapsed }) => {
     severity: "info",
   });
 
-  // const navigate = useNavigate();
-
+  // Validate IMEI/MSISDN
   useEffect(() => {
     setIsValid(isValidIMEI(identifier) || isValidMSISDN(identifier));
   }, [identifier]);
 
+  // Track WebSocket Subscriptions
+  useEffect(() => {
+    console.log("LiveTracking.js - Tracked Device ID:", trackedDeviceId);
+    if (!trackedDeviceId) return;
+
+    console.log(`[WebSocket] Subscribing to ${trackedDeviceId}`);
+
+    subscribeToDevice(trackedDeviceId, (newData) => {
+      console.log("🔄 Real-time update received:", newData);
+
+      setDeviceDetails((prevDetails) => ({
+        ...prevDetails,
+        latestLocation: {
+          ...prevDetails?.latestLocation,
+          ...newData?.latestLocation,
+        },
+        movementSimulation:
+          newData?.movementSimulation || prevDetails?.movementSimulation || [],
+        movementStatusMessage:
+          newData?.movementStatusMessage || prevDetails?.movementStatusMessage,
+      }));
+
+      setShowMap(true);
+    });
+
+    return () => {
+      console.log(`[WebSocket] Unsubscribing from ${trackedDeviceId}`);
+      unsubscribeFromDevice(trackedDeviceId);
+    };
+  }, [trackedDeviceId]);
+
+  // Debugging: Log state updates
+  useEffect(() => {
+    console.log("Device Details updated:", deviceDetails);
+  }, [deviceDetails]);
+
   const fetchLiveLocation = async () => {
     if (!isValid) return;
+
     setError("");
     setLoading(true);
     setProgress(0);
-
-    // Ressetting map visibility on new search
     setShowMap(false);
 
     const interval = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return oldProgress + 20;
-      });
+      setProgress((prev) => (prev >= 100 ? 100 : prev + 20));
     }, 500);
 
     try {
       const paramType = isValidIMEI(identifier) ? "imei" : "msisdn";
       const response = await fetch(
-        `http://localhost:5000/api/locations/getLiveLocation?${paramType}=${identifier}`
+        // `http://localhost:5000/api/locations/getLiveLocation?${paramType}=${identifier}`
+        `https://livetracking-system.onrender.com/api/locations/getLiveLocation?${paramType}=${identifier}`
       );
       const data = await response.json();
 
-      console.log("Getting Device location detailed data:", data);
+      console.log("Fetched Device Data:", data);
 
-      if (response.ok && data.success && data.latestLocation) {
-        setLocation(data); // Store full API response
+      if (data.success && data.latestLocation) {
+        console.log("🚀 Storing Device ID:", data.deviceId);
+        setTrackedDeviceId(data.deviceId);
 
-        setNotification({
-          open: true,
-          message: "Location successfully traced!",
-          severity: "success",
-        });
+        console.log("💾 Storing Device Details:", data);
+        setDeviceDetails(data);
       } else {
-        setError(data.message || "Device location not found.");
-        setNotification({
-          open: true,
-          message: data.message || "Device location not found.",
-          severity: "error",
-        });
+        console.error("❌ Invalid response format:", data);
       }
     } catch (err) {
-      setError("Failed to fetch location. Check API.");
+      setError(err.message);
+      setTrackedDeviceId(null);
+      setDeviceDetails(null);
       setNotification({
         open: true,
-        message: "Failed to fetch location. Please check your API connection.",
+        message: err.message || "Failed to fetch location.",
         severity: "error",
       });
     } finally {
@@ -92,9 +120,25 @@ const LiveTracking = ({ isCollapsed }) => {
     }
   };
 
+  useEffect(() => {
+    console.log("🟢 Updated trackedDeviceId:", trackedDeviceId);
+  }, [trackedDeviceId]);
+
+  useEffect(() => {
+    console.log("🟢 Updated deviceDetails:", deviceDetails);
+  }, [deviceDetails]);
+
+  console.log(
+    "Rendering DeviceInfoPanel with trackedDeviceId:",
+    trackedDeviceId
+  );
+  console.log("📌 Passing to DeviceInfoPanel ->", {
+    trackedDeviceId,
+    deviceDetails,
+  });
+
   return (
     <StyledContainer isCollapsed={isCollapsed}>
-      {/* Form dynamically adjusts with sidebar */}
       <FormWrapper isCollapsed={isCollapsed}>
         <Typography variant="h5" gutterBottom>
           Device Tracking Portal
@@ -131,26 +175,27 @@ const LiveTracking = ({ isCollapsed }) => {
         </StyledButton>
       </FormWrapper>
 
-      {/* Device Info Panel */}
-      {location && (
-        <DeviceInfoPanel deviceData={location} setShowMap={setShowMap} />
+      {/* ✅ Render only when valid data exists */}
+      {deviceDetails && (trackedDeviceId || identifier) ? (
+        <DeviceInfoPanel
+          trackedDeviceId={trackedDeviceId || identifier}
+          deviceDetails={deviceDetails}
+        />
+      ) : (
+        <Typography variant="body2" color="textSecondary">
+          No device details available.
+        </Typography>
       )}
 
-      {/* Map only appears when "View on Map" is clicked */}
-      {showMap && location?.latestLocation && (
-        <MapContainer isCollapsed={isCollapsed}>
+      {showMap && deviceDetails?.latestLocation && (
+        <MapContainer>
           <GoogleMapView
-            latitude={location.latestLocation.latitude}
-            longitude={location.latestLocation.longitude}
-            blinking={true}
+            latitude={deviceDetails.latestLocation.latitude}
+            longitude={deviceDetails.latestLocation.longitude}
           />
         </MapContainer>
       )}
 
-      {/* Device Info Panel */}
-      {location && <DeviceInfoPanel deviceData={location} />}
-
-      {/* Notification */}
       <Notification
         open={notification.open}
         message={notification.message}

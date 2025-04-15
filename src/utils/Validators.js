@@ -3,12 +3,7 @@ export const isValidIMEI = (imei) => {
   return imeiRegex.test(imei);
 };
 
-// export const isValidMSISDN = (msisdn) => {
-//   const msisdnRegex = /^[1-9][0-9]{9,14}$/;
-//   return msisdnRegex.test(msisdn);
-// };
-
 export const isValidMSISDN = (msisdn) => {
-  const msisdnRegex = /^(0\d{9}|[1-9]\d{10,14})$/;
+  const msisdnRegex = /^[1-9][0-9]{9,14}$/;
   return msisdnRegex.test(msisdn);
 };
