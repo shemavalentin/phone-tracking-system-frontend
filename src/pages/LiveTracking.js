@@ -26,9 +26,11 @@ const LiveTracking = ({ isCollapsed }) => {
   const [progress, setProgress] = useState(0);
   const [isValid, setIsValid] = useState(false);
   const [showMap, setShowMap] = useState(false);
-
-  // ✅ Notification queue
-  const [notificationQueue, setNotificationQueue] = useState([]);
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
   // Validate IMEI/MSISDN
   useEffect(() => {
@@ -37,9 +39,14 @@ const LiveTracking = ({ isCollapsed }) => {
 
   // Track WebSocket Subscriptions
   useEffect(() => {
+    console.log("LiveTracking.js - Tracked Device ID:", trackedDeviceId);
     if (!trackedDeviceId) return;
 
+    console.log(`[WebSocket] Subscribing to ${trackedDeviceId}`);
+
     subscribeToDevice(trackedDeviceId, (newData) => {
+      console.log("🔄 Real-time update received:", newData);
+
       setDeviceDetails((prevDetails) => ({
         ...prevDetails,
         latestLocation: {
@@ -56,9 +63,15 @@ const LiveTracking = ({ isCollapsed }) => {
     });
 
     return () => {
+      console.log(`[WebSocket] Unsubscribing from ${trackedDeviceId}`);
       unsubscribeFromDevice(trackedDeviceId);
     };
   }, [trackedDeviceId]);
+
+  // Debugging: Log state updates
+  useEffect(() => {
+    console.log("Device Details updated:", deviceDetails);
+  }, [deviceDetails]);
 
   const fetchLiveLocation = async () => {
     if (!isValid) return;
@@ -79,51 +92,68 @@ const LiveTracking = ({ isCollapsed }) => {
       );
       const data = await response.json();
 
+      console.log("Fetched Device Data:", data);
+
       if (data.success && data.latestLocation) {
+        console.log("🚀 Storing Device ID:", data.deviceId);
         setTrackedDeviceId(data.deviceId);
+
+        console.log("💾 Storing Device Details:", data);
         setDeviceDetails(data);
 
-        // ✅ Add success notification to queue
-        setNotificationQueue((prev) => [
-          ...prev,
-          {
-            message: "✅ The device has been successfully traced.",
-            severity: "success",
-          },
-        ]);
+        // ✅ Show success notification
+        setNotification({
+          open: true,
+          message: "The device has been successfully traced.",
+          severity: "success",
+        });
       } else {
+        console.error("❌ Invalid response format:", data);
+
+        // ❌ Show failure notification
+        setNotification({
+          open: true,
+          message:
+            data.message || "No recent location data found for the device.",
+          severity: "warning",
+        });
+
         setTrackedDeviceId(null);
         setDeviceDetails(null);
-
-        // ❌ Add warning notification to queue
-        setNotificationQueue((prev) => [
-          ...prev,
-          {
-            message:
-              data.message ||
-              "⚠️ No recent location data found for the device.",
-            severity: "warning",
-          },
-        ]);
       }
     } catch (err) {
       setError(err.message);
       setTrackedDeviceId(null);
       setDeviceDetails(null);
 
-      // ❌ Add error notification to queue
-      setNotificationQueue((prev) => [
-        ...prev,
-        {
-          message: err.message || "❌ Failed to fetch location.",
-          severity: "error",
-        },
-      ]);
+      // ❌ Show error notification
+      setNotification({
+        open: true,
+        message: err.message || "Failed to fetch location.",
+        severity: "error",
+      });
     } finally {
       clearInterval(interval);
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("🟢 Updated trackedDeviceId:", trackedDeviceId);
+  }, [trackedDeviceId]);
+
+  useEffect(() => {
+    console.log("🟢 Updated deviceDetails:", deviceDetails);
+  }, [deviceDetails]);
+
+  console.log(
+    "Rendering DeviceInfoPanel with trackedDeviceId:",
+    trackedDeviceId
+  );
+  console.log("📌 Passing to DeviceInfoPanel ->", {
+    trackedDeviceId,
+    deviceDetails,
+  });
 
   return (
     <StyledContainer isCollapsed={isCollapsed}>
@@ -165,7 +195,19 @@ const LiveTracking = ({ isCollapsed }) => {
           ) : (
             "Track Device"
           )}
+
+          {/* {loading ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <CircularProgress size={24} />
+
+              <Typography variant="body2"> Loading ...</Typography>
+            </div>
+          ) : (
+            "Track Device"
+          )} */}
         </StyledButton>
+
+        {/* Better feedback for Invalid Input */}
 
         {!isValid && identifier.length > 0 && (
           <Typography variant="body2" color="error">
@@ -174,6 +216,7 @@ const LiveTracking = ({ isCollapsed }) => {
         )}
       </FormWrapper>
 
+      {/* ✅ Render only when valid data exists */}
       {deviceDetails && (trackedDeviceId || identifier) ? (
         <DeviceInfoPanel
           trackedDeviceId={trackedDeviceId || identifier}
@@ -194,8 +237,12 @@ const LiveTracking = ({ isCollapsed }) => {
         </MapContainer>
       )}
 
-      {/* ✅ Notification queue component */}
-      <Notification queue={notificationQueue} />
+      <Notification
+        open={notification.open}
+        message={notification.message}
+        severity={notification.severity}
+        onClose={() => setNotification({ ...notification, open: false })}
+      />
     </StyledContainer>
   );
 };
