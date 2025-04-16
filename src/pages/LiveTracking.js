@@ -100,13 +100,22 @@ const LiveTracking = ({ isCollapsed }) => {
 
         console.log("💾 Storing Device Details:", data);
         setDeviceDetails(data);
+
+        // ✅ Show success notification
+        setNotification({
+          open: true,
+          message: "The device has been successfully traced.",
+          severity: "success",
+        });
       } else {
         console.error("❌ Invalid response format:", data);
 
+        // ❌ Show failure notification
         setNotification({
           open: true,
-          message: data.message || "Failed to fetch device location.",
-          severity: "warning", // or "error"
+          message:
+            data.message || "No recent location data found for the device.",
+          severity: "warning",
         });
 
         setTrackedDeviceId(null);
@@ -116,15 +125,16 @@ const LiveTracking = ({ isCollapsed }) => {
       setError(err.message);
       setTrackedDeviceId(null);
       setDeviceDetails(null);
+
+      // ❌ Show error notification
       setNotification({
         open: true,
         message: err.message || "Failed to fetch location.",
         severity: "error",
       });
     } finally {
-      // clearInterval(interval);
+      clearInterval(interval);
       setLoading(false);
-      // setProgress(100);
     }
   };
 
