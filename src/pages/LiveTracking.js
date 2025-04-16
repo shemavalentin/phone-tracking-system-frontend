@@ -23,7 +23,7 @@ const LiveTracking = ({ isCollapsed }) => {
   const [trackedDeviceId, setTrackedDeviceId] = useState(null);
   const [deviceDetails, setDeviceDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
+  // const [progress, setProgress] = useState(0);
   const [isValid, setIsValid] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [notification, setNotification] = useState({
@@ -78,12 +78,12 @@ const LiveTracking = ({ isCollapsed }) => {
 
     setError("");
     setLoading(true);
-    setProgress(0);
+    //setProgress(0);
     setShowMap(false);
 
-    const interval = setInterval(() => {
-      setProgress((prev) => (prev >= 100 ? 100 : prev + 20));
-    }, 500);
+    // const interval = setInterval(() => {
+    //   setProgress((prev) => (prev >= 100 ? 100 : prev + 20));
+    // }, 500);
 
     try {
       const paramType = isValidIMEI(identifier) ? "imei" : "msisdn";
@@ -114,9 +114,9 @@ const LiveTracking = ({ isCollapsed }) => {
         severity: "error",
       });
     } finally {
-      clearInterval(interval);
+      // clearInterval(interval);
       setLoading(false);
-      setProgress(100);
+      // setProgress(100);
     }
   };
 
@@ -149,6 +149,11 @@ const LiveTracking = ({ isCollapsed }) => {
           variant="outlined"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && isValid && !loading) {
+              fetchLiveLocation();
+            }
+          }}
           margin="normal"
           error={!!error}
           helperText={error || ""}
@@ -160,7 +165,7 @@ const LiveTracking = ({ isCollapsed }) => {
           onClick={fetchLiveLocation}
           disabled={!isValid || loading}
         >
-          {loading ? (
+          {/* {loading ? (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <CircularProgress
                 size={24}
@@ -171,15 +176,33 @@ const LiveTracking = ({ isCollapsed }) => {
             </div>
           ) : (
             "Track Device"
+          )} */}
+
+          {loading ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <CircularProgress size={24} />
+
+              <Typography variant="body2"> Loading ...</Typography>
+            </div>
+          ) : (
+            "Track Device"
           )}
         </StyledButton>
+
+        {/* Better feedback for Invalid Input */}
+
+        {!isValid && identifier.length > 0 && (
+          <Typography variant="body2" color="error">
+            Please enter a valid IMEI or MSISDN
+          </Typography>
+        )}
       </FormWrapper>
 
       {/* ✅ Render only when valid data exists */}
       {deviceDetails && (trackedDeviceId || identifier) ? (
         <DeviceInfoPanel
           trackedDeviceId={trackedDeviceId || identifier}
-          deviceDeta={deviceDetails}
+          deviceDetails={deviceDetails}
         />
       ) : (
         <Typography variant="body2" color="textSecondary">
