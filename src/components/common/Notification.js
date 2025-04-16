@@ -7,7 +7,8 @@ const Notification = ({ open, message, severity, onClose }) => {
       open={open}
       autoHideDuration={3000}
       onClose={onClose}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      // anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
       <Alert onClose={onClose} severity={severity} variant="filled">
         {message}
