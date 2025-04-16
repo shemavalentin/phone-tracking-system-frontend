@@ -23,7 +23,7 @@ const LiveTracking = ({ isCollapsed }) => {
   const [trackedDeviceId, setTrackedDeviceId] = useState(null);
   const [deviceDetails, setDeviceDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-  // const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [isValid, setIsValid] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [notification, setNotification] = useState({
@@ -78,17 +78,16 @@ const LiveTracking = ({ isCollapsed }) => {
 
     setError("");
     setLoading(true);
-    //setProgress(0);
+    setProgress(0);
     setShowMap(false);
 
-    // const interval = setInterval(() => {
-    //   setProgress((prev) => (prev >= 100 ? 100 : prev + 20));
-    // }, 500);
+    const interval = setInterval(() => {
+      setProgress((prev) => (prev >= 100 ? 100 : prev + 20));
+    }, 500);
 
     try {
       const paramType = isValidIMEI(identifier) ? "imei" : "msisdn";
       const response = await fetch(
-        // `http://localhost:5000/api/locations/getLiveLocation?${paramType}=${identifier}`
         `https://livetracking-system.onrender.com/api/locations/getLiveLocation?${paramType}=${identifier}`
       );
       const data = await response.json();
@@ -165,7 +164,7 @@ const LiveTracking = ({ isCollapsed }) => {
           onClick={fetchLiveLocation}
           disabled={!isValid || loading}
         >
-          {/* {loading ? (
+          {loading ? (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <CircularProgress
                 size={24}
@@ -176,9 +175,9 @@ const LiveTracking = ({ isCollapsed }) => {
             </div>
           ) : (
             "Track Device"
-          )} */}
+          )}
 
-          {loading ? (
+          {/* {loading ? (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <CircularProgress size={24} />
 
@@ -186,7 +185,7 @@ const LiveTracking = ({ isCollapsed }) => {
             </div>
           ) : (
             "Track Device"
-          )}
+          )} */}
         </StyledButton>
 
         {/* Better feedback for Invalid Input */}
