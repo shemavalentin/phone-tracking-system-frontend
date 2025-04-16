@@ -102,6 +102,15 @@ const LiveTracking = ({ isCollapsed }) => {
         setDeviceDetails(data);
       } else {
         console.error("❌ Invalid response format:", data);
+
+        setNotification({
+          open: true,
+          message: data.message || "Failed to fetch device location.",
+          severity: "warning", // or "error"
+        });
+
+        setTrackedDeviceId(null);
+        setDeviceDetails(null);
       }
     } catch (err) {
       setError(err.message);
