@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 
-// Navbar Wrapper
+// Navbar wrapper container
 export const NavbarWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -12,7 +12,7 @@ export const NavbarWrapper = styled.div`
   z-index: 1002;
 `;
 
-// Styled AppBar
+// AppBar (main navbar area)
 export const StyledAppBar = styled(AppBar)`
   border-radius: 10px;
   max-width: 1490px;
@@ -24,6 +24,11 @@ export const StyledAppBar = styled(AppBar)`
   display: flex;
   align-items: center;
   background-color: #1a237e !important;
+
+  @media (max-width: 1024px) {
+    width: 98%;
+    margin-right: 10px;
+  }
 
   @media (max-width: 768px) {
     width: 100%;
@@ -37,7 +42,7 @@ export const StyledAppBar = styled(AppBar)`
   }
 `;
 
-// Styled Toolbar
+// Toolbar (content wrapper inside navbar)
 export const StyledToolbar = styled(Toolbar)`
   display: flex;
   justify-content: space-between;
@@ -46,23 +51,31 @@ export const StyledToolbar = styled(Toolbar)`
   height: 100%;
   padding: 0 20px;
 
+  @media (max-width: 768px) {
+    padding: 0 15px;
+  }
+
   @media (max-width: 480px) {
     padding: 0 10px;
   }
 `;
 
-// Logo
+// Logo image
 export const Logo = styled.img`
   height: 40px;
   width: auto;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    height: 35px;
+  }
 
   @media (max-width: 480px) {
     height: 30px;
   }
 `;
 
-// Navigation Links
+// Nav links (desktop only; hidden on mobile)
 export const NavLinks = styled.div`
   display: flex;
   align-items: center;
@@ -97,11 +110,11 @@ export const NavLinks = styled.div`
   }
 
   @media (max-width: 480px) {
-    display: none; /* Hide links on small screens for mobile menu */
+    display: none; // Hide on mobile — prepare for hamburger menu
   }
 `;
 
-// User Profile (Avatar + Dropdown)
+// User profile with avatar (clickable)
 export const UserProfile = styled.div`
   position: relative;
   display: flex;
@@ -130,7 +143,7 @@ export const UserProfile = styled.div`
   }
 `;
 
-// Dropdown Menu
+// Dropdown menu (on avatar click)
 export const DropdownMenu = styled.div`
   position: absolute;
   top: 50px;
@@ -149,7 +162,7 @@ export const DropdownMenu = styled.div`
   }
 `;
 
-// Dropdown Items
+// Dropdown items inside the menu
 export const DropdownItem = styled(Link)`
   color: #1a237e;
   text-decoration: none;

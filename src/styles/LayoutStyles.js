@@ -9,6 +9,11 @@ export const LayoutContainer = styled.div`
   background-color: #c2e5d3;
   overflow: hidden;
   position: fixed;
+
+  @media (max-width: 768px) {
+    position: relative; // allow scroll on mobile if needed
+    height: auto;
+  }
 `;
 
 export const MainContent = styled.div`
@@ -16,6 +21,11 @@ export const MainContent = styled.div`
   flex-grow: 1;
   width: 100%;
   overflow: hidden;
+  flex-direction: row;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const ContentWrapper = styled.div`
@@ -28,13 +38,19 @@ export const ContentWrapper = styled.div`
   margin-left: ${(props) => (props.isCollapsed ? "80px" : "220px")};
   height: 100vh;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+    height: auto;
+  }
 `;
 
 export const ScrollableContent = styled.div`
   flex-grow: 1;
   overflow-y: auto;
   padding: 20px;
-  max-height: calc(100vh - 60px); /* Adjust height dynamically */
+  max-height: calc(100vh - 60px);
   min-height: 0;
   position: relative;
   display: flex;
@@ -60,5 +76,14 @@ export const ScrollableContent = styled.div`
 
   &::-webkit-scrollbar-thumb:hover {
     background: #555;
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    max-height: none;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
   }
 `;
