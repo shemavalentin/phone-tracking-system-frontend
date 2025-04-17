@@ -232,6 +232,24 @@ const LiveTracking = ({ isCollapsed }) => {
         </Typography>
       )}
 
+      {/* Reopen Panel Button when panel is hidden but device is tracked */}
+      {isPanelVisible && deviceDetails && (
+        <div
+          style={{
+            marginTop: "20px",
+            marginLeft: "20px",
+          }}
+        >
+          <StyledButton
+            variant="outlined"
+            color="primary"
+            onClick={() => setIsPanelVisible(true)}
+          >
+            Reopen Panel
+          </StyledButton>
+        </div>
+      )}
+
       {showMap && deviceDetails?.latestLocation && (
         <MapContainer>
           <GoogleMapView
