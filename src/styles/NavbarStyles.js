@@ -25,6 +25,8 @@ export const StyledAppBar = styled(AppBar)`
   align-items: center;
   background-color: #1a237e !important;
 
+  z-index: 1200; /* above sidebar*/
+
   @media (max-width: 1024px) {
     width: 98%;
     margin-right: 10px;
@@ -38,7 +40,7 @@ export const StyledAppBar = styled(AppBar)`
   }
 
   @media (max-width: 480px) {
-    height: 50px;
+    height: 55px;
   }
 `;
 
@@ -178,5 +180,18 @@ export const DropdownItem = styled(Link)`
   @media (max-width: 480px) {
     font-size: 13px;
     padding: 6px 8px;
+  }
+`;
+
+export const ToggleMenuButton = styled.button`
+  display: none;
+  background: noen;
+  border: none;
+  color: #ffffff;
+  font-size: 26px;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: block;
   }
 `;

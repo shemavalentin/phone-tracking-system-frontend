@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Sidebar from "./Sidebar";
@@ -11,11 +11,20 @@ import {
 } from "../../styles/LayoutStyles";
 
 const Layout = ({ children, deviceData, isCollapsed, toggleSidebar }) => {
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const handleSidebarToggle = () => {
+    setIsMobileSidebarOpen((prev) => !prev);
+  };
+
   return (
     <LayoutContainer>
-      <Navbar />
+      <Navbar handleSidebarToggle={handleSidebarToggle} />
       <MainContent>
-        <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
+        <Sidebar
+          isCollapsed={isCollapsed}
+          toggleSidebar={toggleSidebar}
+          isMobileOpen={isMobileSidebarOpen}
+        />
 
         <ContentWrapper isCollapsed={isCollapsed}>
           {deviceData && <DeviceInfoPanel deviceData={deviceData} />}

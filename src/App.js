@@ -14,6 +14,7 @@ const App = () => {
     message: "",
     severity: "info",
   });
+
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {

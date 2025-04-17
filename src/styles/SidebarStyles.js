@@ -5,32 +5,22 @@ import { NavLink } from "react-router-dom";
 export const SidebarContainer = styled.div`
   width: ${(props) => (props.isCollapsed ? "60px" : "220px")};
   background-color: #29465b;
-  height: calc(100vh - 140px); /* Adjusted for top navbar + bottom margin */
+  height: 100vh;
   position: fixed;
   top: 80px;
-  left: 25px;
-  bottom: 60px;
+  left: ${(props) =>
+    props.isMobileOpen ? "0" : "-250px"}; // slide in on mobile
+  bottom: 0px;
   color: white;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   padding-top: 10px;
   z-index: 1001;
   box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2);
 
-  @media (max-width: 768px) {
-    position: absolute;
-    top: 60px;
-    left: ${(props) => (props.isMobileOpen ? "0" : "-220px")};
-    width: 220px;
-    transition: left 0.3s ease-in-out;
-    height: calc(100vh - 60px);
-    box-shadow: ${(props) =>
-      props.isMobileOpen ? "3px 0 5px rgba(0, 0, 0, 0.3)" : "none"};
-  }
-
-  @media (max-width: 480px) {
-    width: 200px;
+  @media (min-width: 769px) {
+    left: 0;
   }
 `;
 
