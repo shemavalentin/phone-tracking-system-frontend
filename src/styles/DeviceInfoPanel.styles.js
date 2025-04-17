@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { FaChevronDown } from "react-icons/fa";
-import { Translate } from "@mui/icons-material";
 
 export const ResponsivePanelContainer = styled.div`
   position: absolute;
@@ -159,16 +158,12 @@ export const ViewMapButton = styled.button`
 
 export const CloseButton = styled.button`
   position: absolute;
-  top: 18px;
-  right: 22px;
-  background: #e74c3c;
-  color: white;
+  top: 15px;
+  right: 20px;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 24px;
+  color: #555;
   cursor: pointer;
   transition: background 0.3s ease;
 
