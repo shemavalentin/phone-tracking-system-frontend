@@ -255,7 +255,7 @@ const DeviceInfoPanel = ({ deviceData, isVisible, setIsVisible }) => {
 
           {/* View on Map Button */}
           <ViewMapButton onClick={() => setShowMap(true)}>
-            View on Map
+            View Device on Map
           </ViewMapButton>
         </PanelContent>
       </ResponsivePanelContainer>
