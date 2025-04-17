@@ -66,20 +66,20 @@ const DeviceInfoPanel = ({ deviceData, isVisible, setIsVisible }) => {
   const [showMap, setShowMap] = useState(false);
   const panelRef = useRef();
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (panelRef.current && !panelRef.current.contains(event.target)) {
-        setIsVisible(false);
-      }
-    };
-    if (isVisible) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (panelRef.current && !panelRef.current.contains(event.target)) {
+  //       setIsVisible(false);
+  //     }
+  //   };
+  //   if (isVisible) {
+  //     document.addEventListener("mousedown", handleClickOutside);
+  //   }
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isVisible, setIsVisible]);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [isVisible, setIsVisible]);
 
   // Close on Escape key
   useEffect(() => {
