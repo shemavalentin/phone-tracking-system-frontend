@@ -5,11 +5,11 @@ import { NavLink } from "react-router-dom";
 export const SidebarContainer = styled.div`
   width: ${(props) => (props.isCollapsed ? "60px" : "220px")};
   background-color: #29465b;
-  height: calc(100vh - 140px); /* Adjusted for top navbar + bottom margin */
+  height: 100vh;
   position: fixed;
   top: 80px;
   left: 25px;
-  bottom: 60px;
+  bottom: 90px;
   color: white;
   display: flex;
   flex-direction: column;
@@ -17,21 +17,6 @@ export const SidebarContainer = styled.div`
   padding-top: 10px;
   z-index: 1001;
   box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2);
-
-  @media (max-width: 768px) {
-    position: absolute;
-    top: 60px;
-    left: ${(props) => (props.isMobileOpen ? "0" : "-220px")};
-    width: 220px;
-    transition: left 0.3s ease-in-out;
-    height: calc(100vh - 60px);
-    box-shadow: ${(props) =>
-      props.isMobileOpen ? "3px 0 5px rgba(0, 0, 0, 0.3)" : "none"};
-  }
-
-  @media (max-width: 480px) {
-    width: 200px;
-  }
 `;
 
 // Sidebar Header
@@ -41,11 +26,6 @@ export const SidebarHeader = styled.div`
   padding: 16px;
   justify-content: center;
   font-weight: bold;
-
-  @media (max-width: 480px) {
-    padding: 12px;
-    font-size: 14px;
-  }
 `;
 
 // Sidebar Header Content
@@ -63,14 +43,6 @@ export const ToggleButton = styled.button`
   cursor: pointer;
   font-size: 24px;
   padding: 4px;
-
-  @media (max-width: 768px) {
-    font-size: 22px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 20px;
-  }
 `;
 
 // Sidebar Menu
@@ -78,10 +50,6 @@ export const SidebarMenu = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px;
-
-  @media (max-width: 480px) {
-    padding: 8px;
-  }
 `;
 
 // Sidebar Item
@@ -103,16 +71,6 @@ export const SidebarItem = styled(NavLink)`
     background: #3f51b5;
     font-weight: bold;
   }
-
-  @media (max-width: 768px) {
-    padding: 10px 14px;
-    font-size: 15px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 8px 12px;
-    font-size: 14px;
-  }
 `;
 
 // Sidebar Icon
@@ -121,10 +79,6 @@ export const SidebarIcon = styled.div`
   display: flex;
   align-items: center;
   font-size: 20px;
-
-  @media (max-width: 480px) {
-    font-size: 18px;
-  }
 `;
 
 // Expandable Section
@@ -133,11 +87,6 @@ export const ExpandableSection = styled.div`
   padding-left: 20px;
   font-size: 14px;
   margin-top: 5px;
-
-  @media (max-width: 480px) {
-    padding-left: 16px;
-    font-size: 13px;
-  }
 `;
 
 // Expandable Button
@@ -154,15 +103,5 @@ export const ExpandableButton = styled.div`
 
   &:hover {
     background: #2c3e50;
-  }
-
-  @media (max-width: 768px) {
-    padding: 10px 14px;
-    font-size: 15px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 8px 12px;
-    font-size: 14px;
   }
 `;

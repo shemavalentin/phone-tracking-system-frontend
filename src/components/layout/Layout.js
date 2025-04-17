@@ -9,6 +9,7 @@ import {
   ContentWrapper,
   ScrollableContent,
 } from "../../styles/LayoutStyles";
+import { SidebarContainer } from "../../styles/SidebarStyles";
 
 const Layout = ({ children, deviceData, isCollapsed, toggleSidebar }) => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -30,6 +31,11 @@ const Layout = ({ children, deviceData, isCollapsed, toggleSidebar }) => {
           {deviceData && <DeviceInfoPanel deviceData={deviceData} />}
 
           <ScrollableContent>{children}</ScrollableContent>
+
+          <SidebarContainer
+            isCollapsed={isCollapsed}
+            isMobileOpen={isMobileSidebarOpen}
+          />
 
           {/* Footer is now inside ContentWrapper, ensuring it stays at the bottom */}
           <Footer />
