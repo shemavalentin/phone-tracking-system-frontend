@@ -61,12 +61,9 @@ const ExpandableContent = ({
   );
 };
 
-const DeviceInfoPanel = ({ deviceData }) => {
+const DeviceInfoPanel = ({ deviceData, isVisible, setIsVisible }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [showMap, setShowMap] = useState(false);
-
-  const [isVisible, setIsVisible] = useState(true);
-
   const panelRef = useRef();
 
   useEffect(() => {
@@ -75,9 +72,14 @@ const DeviceInfoPanel = ({ deviceData }) => {
         setIsVisible(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    if (isVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isVisible, setIsVisible]);
 
   // Close on Escape key
   useEffect(() => {
@@ -120,9 +122,12 @@ const DeviceInfoPanel = ({ deviceData }) => {
     <>
       <ResponsivePanelContainer
         ref={panelRef}
-        isVisible={isVisible}
-        role="dialog"
-        aria-modal="true"
+        style={{
+          transform: isVisible ? "translateY(0)" : "translateY(-20px)",
+          opacity: isVisible ? 1 : 0,
+          pointerEvents: isVisible ? "auto" : "none",
+          transition: " opacity 0.3s ease, transform 0.3s ease",
+        }}
       >
         <CloseButton
           onClick={() => setIsVisible(false)}

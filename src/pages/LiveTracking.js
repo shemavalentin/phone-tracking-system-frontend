@@ -26,6 +26,7 @@ const LiveTracking = ({ isCollapsed }) => {
   const [progress, setProgress] = useState(0);
   const [isValid, setIsValid] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [isPanelVisible, setIsPanelVisible] = useState(false);
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -100,6 +101,7 @@ const LiveTracking = ({ isCollapsed }) => {
 
         console.log("💾 Storing Device Details:", data);
         setDeviceDetails(data);
+        setIsPanelVisible(true);
 
         // ✅ Show success notification
         setNotification({
@@ -221,6 +223,8 @@ const LiveTracking = ({ isCollapsed }) => {
         <DeviceInfoPanel
           trackedDeviceId={trackedDeviceId || identifier}
           deviceData={deviceDetails}
+          isVisible={isPanelVisible}
+          setIsVisible={setIsPanelVisible}
         />
       ) : (
         <Typography variant="body2" color="textSecondary">
