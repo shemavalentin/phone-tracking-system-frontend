@@ -10,20 +10,20 @@ import {
   BusinessList,
   BusinessItem,
   ViewMapButton,
+  ChevronIcon,
+  AccordionContent,
 } from "../../styles/DeviceInfoPanel.styles";
 //import { FaChevronDown } from "react-icons/fa";
 import MapModal from "../tracking/MapModal";
-import { ChevronIcon } from "../../styles/DeviceInfoPanel.styles";
 
 const ExpandableContent = ({ title, isExpanded, toggleExpand, children }) => (
   <ExpandableSection>
-    <ExpandableButton
-      onClick={toggleExpand}
-      className={isExpanded ? "expanded" : ""}
-    >
-      <ChevronIcon className="icon" />
+    <ExpandableButton onClick={toggleExpand}>
       {title}
+      <ChevronIcon className={isExpanded ? "rotate" : ""} />
     </ExpandableButton>
+
+    <AccordionContent isExpanded={isExpanded}>{children}</AccordionContent>
     {isExpanded && <div>{children}</div>}
   </ExpandableSection>
 );

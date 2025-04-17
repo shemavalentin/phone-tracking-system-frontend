@@ -54,8 +54,9 @@ export const ExpandableSection = styled.div`
 
 export const ExpandableButton = styled.button`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  width: 100%;
   background: none;
   border: none;
   color: #007bff;
@@ -63,10 +64,7 @@ export const ExpandableButton = styled.button`
   font-size: 15px;
   font-weight: 600;
   padding: 6px 0;
-
-  .icon {
-    transition: transform 0.3s ease;
-  }
+  transition: color 0.2s;
 
   &:hover {
     color: #0056b3;
@@ -74,7 +72,10 @@ export const ExpandableButton = styled.button`
 `;
 
 export const ChevronIcon = styled(FaChevronDown)`
-  margin-left: 2px;
+  transition: transform 0.3s ease-in-out;
+  &.rotate {
+    transform: rotate(180deg);
+  }
 `;
 
 export const BusinessList = styled.ul`
@@ -109,4 +110,11 @@ export const ViewMapButton = styled.button`
   &:hover {
     background-color: #0056b3;
   }
+`;
+
+export const AccordionContent = styled.div`
+  overflow: hidden;
+  max-height: ${({ isExpanded }) => (isExpanded ? "1000px" : "0")};
+  opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
+  transition: max-height 0.4s ease, opacity 0.3s ease;
 `;
