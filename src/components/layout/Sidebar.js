@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import ListIcon from "@mui/icons-material/List";
@@ -23,11 +24,12 @@ import {
   ExpandableButton,
 } from "../../styles/SidebarStyles";
 
-const Sidebar = ({ isCollapsed, toggleSidebar, isMobileOpen }) => {
+const Sidebar = ({ isCollapsed, toggleSidebar }) => {
   const [isTrackingOpen, setIsTrackingOpen] = useState(true);
 
   return (
-    <SidebarContainer isCollapsed={isCollapsed} isMobileOpen={isMobileOpen}>
+    <SidebarContainer isCollapsed={isCollapsed}>
+      {/* Sidebar Header with Toggle Button */}
       <SidebarHeader>
         <HeaderContent>
           <ToggleButton onClick={toggleSidebar}>
@@ -37,6 +39,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar, isMobileOpen }) => {
         </HeaderContent>
       </SidebarHeader>
 
+      {/* Sidebar Menu */}
       <SidebarMenu>
         <SidebarItem to="/" activeClassName="active">
           <SidebarIcon>
@@ -59,6 +62,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar, isMobileOpen }) => {
           {!isCollapsed && "Tracked Devices"}
         </SidebarItem>
 
+        {/* Expandable Section for Tracking */}
         <ExpandableButton onClick={() => setIsTrackingOpen(!isTrackingOpen)}>
           <SidebarIcon>
             <MapIcon />
