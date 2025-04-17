@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import ListIcon from "@mui/icons-material/List";
@@ -22,107 +21,93 @@ import {
   HeaderContent,
   ExpandableSection,
   ExpandableButton,
-  Backdrop,
 } from "../../styles/SidebarStyles";
 
-const Sidebar = ({ isCollapsed, toggleSidebar }) => {
+const Sidebar = ({ isCollapsed, toggleSidebar, isMobileOpen }) => {
   const [isTrackingOpen, setIsTrackingOpen] = useState(true);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  const toggleMobileSidebar = () => {
-    setIsMobileOpen(!isMobileOpen);
-  };
 
   return (
-    <>
-      {/* Backdrop overlay */}
-      {isMobileOpen && <Backdrop onClick={toggleMobileSidebar} />}
+    <SidebarContainer isCollapsed={isCollapsed} isMobileOpen={isMobileOpen}>
+      <SidebarHeader>
+        <HeaderContent>
+          <ToggleButton onClick={toggleSidebar}>
+            <MenuIcon />
+          </ToggleButton>
+          {!isCollapsed && <span>Menu</span>}
+        </HeaderContent>
+      </SidebarHeader>
 
-      <SidebarContainer isCollapsed={isCollapsed} isMobileOpen={isMobileOpen}>
-        {/* Sidebar Header with Toggle Button */}
-        <SidebarHeader>
-          <HeaderContent>
-            <ToggleButton onClick={toggleMobileSidebar}>
-              <MenuIcon />
-            </ToggleButton>
-            {!isCollapsed && <span>Menu</span>}
-          </HeaderContent>
-        </SidebarHeader>
+      <SidebarMenu>
+        <SidebarItem to="/" activeClassName="active">
+          <SidebarIcon>
+            <HomeIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Dashboard"}
+        </SidebarItem>
 
-        {/* Sidebar Menu */}
-        <SidebarMenu>
-          <SidebarItem to="/" activeClassName="active">
-            <SidebarIcon>
-              <HomeIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Dashboard"}
-          </SidebarItem>
+        <SidebarItem to="/search" activeClassName="active">
+          <SidebarIcon>
+            <SearchIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Search / Filter Devices"}
+        </SidebarItem>
 
-          <SidebarItem to="/search" activeClassName="active">
-            <SidebarIcon>
-              <SearchIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Search / Filter Devices"}
-          </SidebarItem>
+        <SidebarItem to="/trackeddeviceslist" activeClassName="active">
+          <SidebarIcon>
+            <ListIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Tracked Devices"}
+        </SidebarItem>
 
-          <SidebarItem to="/trackeddeviceslist" activeClassName="active">
-            <SidebarIcon>
-              <ListIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Tracked Devices"}
-          </SidebarItem>
+        <ExpandableButton onClick={() => setIsTrackingOpen(!isTrackingOpen)}>
+          <SidebarIcon>
+            <MapIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Live Tracking"}
+          {!isCollapsed &&
+            (isTrackingOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
+        </ExpandableButton>
 
-          {/* Expandable Section for Tracking */}
-          <ExpandableButton onClick={() => setIsTrackingOpen(!isTrackingOpen)}>
-            <SidebarIcon>
-              <MapIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Live Tracking"}
-            {!isCollapsed &&
-              (isTrackingOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
-          </ExpandableButton>
+        {isTrackingOpen && (
+          <ExpandableSection isCollapsed={isCollapsed}>
+            <SidebarItem to="/livetracking" activeClassName="active">
+              {!isCollapsed && "Start Tracking"}
+            </SidebarItem>
+            <SidebarItem to="/geofencing" activeClassName="active">
+              {!isCollapsed && "Geofencing & Alerts"}
+            </SidebarItem>
+          </ExpandableSection>
+        )}
 
-          {isTrackingOpen && (
-            <ExpandableSection isCollapsed={isCollapsed}>
-              <SidebarItem to="/livetracking" activeClassName="active">
-                {!isCollapsed && "Start Tracking"}
-              </SidebarItem>
-              <SidebarItem to="/geofencing" activeClassName="active">
-                {!isCollapsed && "Geofencing & Alerts"}
-              </SidebarItem>
-            </ExpandableSection>
-          )}
+        <SidebarItem to="/reports" activeClassName="active">
+          <SidebarIcon>
+            <ReportIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Reports & Analytics"}
+        </SidebarItem>
 
-          <SidebarItem to="/reports" activeClassName="active">
-            <SidebarIcon>
-              <ReportIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Reports & Analytics"}
-          </SidebarItem>
+        <SidebarItem to="/alerts" activeClassName="active">
+          <SidebarIcon>
+            <AlertIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Device Alerts"}
+        </SidebarItem>
 
-          <SidebarItem to="/alerts" activeClassName="active">
-            <SidebarIcon>
-              <AlertIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Device Alerts"}
-          </SidebarItem>
+        <SidebarItem to="/support" activeClassName="active">
+          <SidebarIcon>
+            <SupportIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Help & Support"}
+        </SidebarItem>
 
-          <SidebarItem to="/support" activeClassName="active">
-            <SidebarIcon>
-              <SupportIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Help & Support"}
-          </SidebarItem>
-
-          <SidebarItem to="/settings" activeClassName="active">
-            <SidebarIcon>
-              <SettingsIcon />
-            </SidebarIcon>
-            {!isCollapsed && "Settings"}
-          </SidebarItem>
-        </SidebarMenu>
-      </SidebarContainer>
-    </>
+        <SidebarItem to="/settings" activeClassName="active">
+          <SidebarIcon>
+            <SettingsIcon />
+          </SidebarIcon>
+          {!isCollapsed && "Settings"}
+        </SidebarItem>
+      </SidebarMenu>
+    </SidebarContainer>
   );
 };
 
