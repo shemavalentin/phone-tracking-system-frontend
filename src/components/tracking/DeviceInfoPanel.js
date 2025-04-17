@@ -11,8 +11,8 @@ import {
   BusinessItem,
   ViewMapButton,
   ChevronIcon,
-  AccordionContent,
   AccordionWrapper,
+  CloseButton,
 } from "../../styles/DeviceInfoPanel.styles";
 //import { FaChevronDown } from "react-icons/fa";
 import MapModal from "../tracking/MapModal";
@@ -65,6 +65,12 @@ const DeviceInfoPanel = ({ deviceData }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [showMap, setShowMap] = useState(false);
 
+  const [isVisible, setIsVisible] = useState(true);
+
+  const handleClose = () => {
+    setIsVisible(false);
+  };
+
   if (!deviceData || !deviceData.latestLocation) return null;
 
   const { latestLocation } = deviceData;
@@ -73,7 +79,11 @@ const DeviceInfoPanel = ({ deviceData }) => {
 
   return (
     <>
-      <ResponsivePanelContainer>
+      <ResponsivePanelContainer isVisible={isVisible}>
+        <CloseButton onClick={handleClose} aria-label="Close Panel">
+          &items;
+        </CloseButton>
+
         <PanelHeader>DEVICE LOCATION DETAILS</PanelHeader>
         <PanelContent>
           <Section>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FaChevronDown } from "react-icons/fa";
+import { Translate } from "@mui/icons-material";
 
 export const ResponsivePanelContainer = styled.div`
   position: absolute;
@@ -11,11 +12,18 @@ export const ResponsivePanelContainer = styled.div`
   border: 1px solid #ddd;
   border-radius: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   padding: 60px 40px;
   max-height: calc(100vh - 100px);
   overflow-y: auto;
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.4s ease-in-out, opacity 0.3s ease;
   z-index: 1001;
+
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateX(0)" : "translateX(120%)"};
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
 
   @media (max-width: 768px) {
     left: 5%;
@@ -48,6 +56,15 @@ export const PanelContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  @media (max-width: 480px) {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    height: 80vh;
+    border-radius: 20px 20px 0 0;
+    overflow-y: auto;
+  }
 `;
 
 export const Section = styled.div`
@@ -146,5 +163,31 @@ export const ViewMapButton = styled.button`
   @media (max-width: 480px) {
     font-size: 14px;
     padding: 12px;
+  }
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #c0392b;
+  }
+
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
   }
 `;
