@@ -73,8 +73,36 @@ export const ExpandableButton = styled.button`
 
 export const ChevronIcon = styled(FaChevronDown)`
   transition: transform 0.3s ease-in-out;
-  &.rotate {
+  &.rotated {
     transform: rotate(180deg);
+  }
+`;
+
+export const AccordionWrapper = styled.div`
+  overflow: hidden;
+  transition: height 0.4 ease;
+`;
+
+export const ResponsivePanelContainer = styled.div`
+  position: absolute;
+  top: 72px;
+  right: 20px;
+  width: 90%;
+  max-width: 500px;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  padding: 60px;
+  max-height: 100vh;
+  overflow-y: auto;
+  transition: all 0.3s ease-in out;
+  z-index: 1001;
+
+  @media (max-width: 768px) {
+    right: 10px;
+    left: 10px;
+    padding: 30px 20px;
   }
 `;
 

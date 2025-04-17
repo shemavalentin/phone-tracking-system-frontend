@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 import {
-  PanelContainer,
+  ResponsivePanelContainer,
   PanelHeader,
   PanelContent,
   Section,
@@ -12,42 +12,68 @@ import {
   ViewMapButton,
   ChevronIcon,
   AccordionContent,
+  AccordionWrapper,
 } from "../../styles/DeviceInfoPanel.styles";
 //import { FaChevronDown } from "react-icons/fa";
 import MapModal from "../tracking/MapModal";
 
-const ExpandableContent = ({ title, isExpanded, toggleExpand, children }) => (
-  <ExpandableSection>
-    <ExpandableButton onClick={toggleExpand}>
-      {title}
-      <ChevronIcon className={isExpanded ? "rotate" : ""} />
-    </ExpandableButton>
+const ExpandableContent = ({
+  title,
+  sectionKey,
+  activeSection,
+  setActiveSection,
+  children,
+}) => {
+  const contentRef = useRef(null);
+  const isExpanded = activeSection === sectionKey;
+  const [height, setHeight] = useState(0);
 
-    <AccordionContent isExpanded={isExpanded}>{children}</AccordionContent>
-    {isExpanded && <div>{children}</div>}
-  </ExpandableSection>
-);
+  useEffect(() => {
+    if (contentRef.current) {
+      setHeight(isExpanded ? contentRef.current.scrollHeight : 0);
+    }
+  }, [isExpanded]);
+
+  const toggle = () => {
+    setActiveSection(isExpanded ? null : sectionKey);
+  };
+
+  return (
+    <ExpandableSection>
+      <ExpandableButton
+        onClick={toggle}
+        aria-expanded={isExpanded}
+        aria-controls={`${sectionKey}-content`}
+      >
+        {title}
+
+        <ChevronIcon className={isExpanded ? "rotated" : " "} />
+      </ExpandableButton>
+
+      <AccordionWrapper
+        id={`${sectionKey}-content`}
+        ref={contentRef}
+        style={{ height: `${height}px` }}
+      >
+        <div>{children}</div>
+      </AccordionWrapper>
+    </ExpandableSection>
+  );
+};
 
 const DeviceInfoPanel = ({ deviceData }) => {
-  const [expandedSections, setExpandedSections] = useState({});
+  const [activeSection, setActiveSection] = useState(null);
   const [showMap, setShowMap] = useState(false);
 
-  if (!deviceData || !deviceData.latestLocation) {
-    console.log("DeviceInfoPanel received invalid data:", deviceData);
-    return null;
-  }
+  if (!deviceData || !deviceData.latestLocation) return null;
 
   const { latestLocation } = deviceData;
   const movement = latestLocation.movementSimulation?.[0] || {};
   const { handoverData, readableLocation, computedDistances } = movement;
 
-  const toggleExpand = (section) => {
-    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
-  };
-
   return (
     <>
-      <PanelContainer>
+      <ResponsivePanelContainer>
         <PanelHeader>DEVICE LOCATION DETAILS</PanelHeader>
         <PanelContent>
           <Section>
@@ -68,8 +94,9 @@ const DeviceInfoPanel = ({ deviceData }) => {
           {handoverData && (
             <ExpandableContent
               title="Handover Data"
-              isExpanded={expandedSections.handover}
-              toggleExpand={() => toggleExpand("handover")}
+              sectionKey="handover"
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
             >
               <Section>
                 <strong>Source Anchor:</strong> <br />
@@ -100,8 +127,9 @@ const DeviceInfoPanel = ({ deviceData }) => {
           {readableLocation && (
             <ExpandableContent
               title="Location Details"
-              isExpanded={expandedSections.location}
-              toggleExpand={() => toggleExpand("location")}
+              sectionKey="location"
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
             >
               <Section>
                 <strong>Formatted Address:</strong>{" "}
@@ -135,8 +163,9 @@ const DeviceInfoPanel = ({ deviceData }) => {
           {readableLocation?.localBusinesses?.length > 0 && (
             <ExpandableContent
               title="Nearby Businesses"
-              isExpanded={expandedSections.businesses}
-              toggleExpand={() => toggleExpand("businesses")}
+              sectionKey="business"
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
             >
               <Section>
                 <BusinessList>
@@ -155,8 +184,9 @@ const DeviceInfoPanel = ({ deviceData }) => {
           {computedDistances?.length > 0 && (
             <ExpandableContent
               title="Computed Distances"
-              isExpanded={expandedSections.distances}
-              toggleExpand={() => toggleExpand("distances")}
+              sectionKey="distance"
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
             >
               {computedDistances.map((dist, index) => (
                 <Section key={index}>
@@ -173,7 +203,7 @@ const DeviceInfoPanel = ({ deviceData }) => {
             View on Map
           </ViewMapButton>
         </PanelContent>
-      </PanelContainer>
+      </ResponsivePanelContainer>
 
       {showMap && (
         <MapModal
