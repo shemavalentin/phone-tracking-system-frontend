@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Sidebar from "./Sidebar";
@@ -9,33 +9,18 @@ import {
   ContentWrapper,
   ScrollableContent,
 } from "../../styles/LayoutStyles";
-import { SidebarContainer } from "../../styles/SidebarStyles";
 
 const Layout = ({ children, deviceData, isCollapsed, toggleSidebar }) => {
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const handleSidebarToggle = () => {
-    setIsMobileSidebarOpen((prev) => !prev);
-  };
-
   return (
     <LayoutContainer>
-      <Navbar handleSidebarToggle={handleSidebarToggle} />
+      <Navbar />
       <MainContent>
-        <Sidebar
-          isCollapsed={isCollapsed}
-          toggleSidebar={toggleSidebar}
-          isMobileOpen={isMobileSidebarOpen}
-        />
+        <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
 
         <ContentWrapper isCollapsed={isCollapsed}>
           {deviceData && <DeviceInfoPanel deviceData={deviceData} />}
 
           <ScrollableContent>{children}</ScrollableContent>
-
-          <SidebarContainer
-            isCollapsed={isCollapsed}
-            isMobileOpen={isMobileSidebarOpen}
-          />
 
           {/* Footer is now inside ContentWrapper, ensuring it stays at the bottom */}
           <Footer />
