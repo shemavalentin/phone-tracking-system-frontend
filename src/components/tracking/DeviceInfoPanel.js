@@ -11,8 +11,9 @@ import {
   BusinessItem,
   ViewMapButton,
 } from "../../styles/DeviceInfoPanel.styles";
-import { FaChevronDown } from "react-icons/fa";
+//import { FaChevronDown } from "react-icons/fa";
 import MapModal from "../tracking/MapModal";
+import { ChevronIcon } from "../../styles/DeviceInfoPanel.styles";
 
 const ExpandableContent = ({ title, isExpanded, toggleExpand, children }) => (
   <ExpandableSection>
@@ -20,8 +21,8 @@ const ExpandableContent = ({ title, isExpanded, toggleExpand, children }) => (
       onClick={toggleExpand}
       className={isExpanded ? "expanded" : ""}
     >
+      <ChevronIcon className="icon" />
       {title}
-      <FaChevronDown className={`icon ${isExpanded ? "rotated" : ""}`} />
     </ExpandableButton>
     {isExpanded && <div>{children}</div>}
   </ExpandableSection>

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { FaChevronDown } from "react-icons/fa";
 
 export const PanelContainer = styled.div`
   position: absolute;
@@ -10,7 +11,7 @@ export const PanelContainer = styled.div`
   border: 1px solid #ddd;
   border-radius: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  padding: 60px;
+  padding: 60px 30px;
   max-height: 100vh;
   overflow-y: auto;
   transition: all 0.3s ease-in-out;
@@ -18,28 +19,31 @@ export const PanelContainer = styled.div`
 `;
 
 export const PanelHeader = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
+  font-size: 22px;
+  font-weight: 800;
+  color: #2e2e2e;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 `;
 
 export const PanelContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 `;
 
 export const Section = styled.div`
   font-size: 15px;
-  color: #444;
+  color: #333;
   word-wrap: break-word;
-  padding: 10px;
-  background: #f1f3f5;
+  padding: 12px;
+  background: #f4f6f8;
+  border-left: 4px solid #007bff;
   border-radius: 8px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+  // margin-bottom: 10px;
 `;
 
 export const ExpandableSection = styled.div`
@@ -49,17 +53,28 @@ export const ExpandableSection = styled.div`
 `;
 
 export const ExpandableButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 10px;
   background: none;
   border: none;
   color: #007bff;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  padding: 6px;
-  text-decoration: underline;
+  padding: 6px 0;
+
+  .icon {
+    transition: transform 0.3s ease;
+  }
+
   &:hover {
     color: #0056b3;
   }
+`;
+
+export const ChevronIcon = styled(FaChevronDown)`
+  margin-left: 2px;
 `;
 
 export const BusinessList = styled.ul`
@@ -72,23 +87,25 @@ export const BusinessItem = styled.li`
   font-size: 14px;
   color: #555;
   background: #eef2f7;
-  padding: 8px;
-  margin-bottom: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
   border-radius: 6px;
+  border-left: 3px solid #007bff;
 `;
 
 export const ViewMapButton = styled.button`
   width: 100%;
-  padding: 12px;
-  margin-top: 5px;
+  padding: 14px;
+  margin-top: 15px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
   transition: background 0.3s ease-in-out;
+
   &:hover {
     background-color: #0056b3;
   }
