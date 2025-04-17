@@ -133,7 +133,7 @@ const DeviceInfoPanel = ({ deviceData, isVisible, setIsVisible }) => {
           onClick={() => setIsVisible(false)}
           aria-label="Close Panel"
         >
-          &items;
+          close;
         </CloseButton>
 
         <PanelHeader>DEVICE LOCATION DETAILS</PanelHeader>
