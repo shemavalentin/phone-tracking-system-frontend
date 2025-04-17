@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export const NavbarWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center; /* Center the navbar */
+  justify-content: center;
   position: fixed;
   top: 0;
   z-index: 1002;
@@ -17,13 +17,24 @@ export const StyledAppBar = styled(AppBar)`
   border-radius: 10px;
   max-width: 1490px;
   width: 95%;
-  height: 60px; /* Increased height for better centering */
+  height: 60px;
   margin-top: 15px;
   margin-right: 20px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
-  align-items: center; /* Ensures the navbar content is centered */
-  background-color: #1a237e !important; /* Set your desired color */
+  align-items: center;
+  background-color: #1a237e !important;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    height: 55px;
+  }
+
+  @media (max-width: 480px) {
+    height: 50px;
+  }
 `;
 
 // Styled Toolbar
@@ -32,34 +43,61 @@ export const StyledToolbar = styled(Toolbar)`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 100%; /* Ensures full height */
-  padding: 0 20px; /* Adjusted padding */
+  height: 100%;
+  padding: 0 20px;
+
+  @media (max-width: 480px) {
+    padding: 0 10px;
+  }
 `;
 
 // Logo
 export const Logo = styled.img`
-  height: 40px; /* Adjusted for better centering */
+  height: 40px;
   width: auto;
   cursor: pointer;
+
+  @media (max-width: 480px) {
+    height: 30px;
+  }
 `;
 
 // Navigation Links
 export const NavLinks = styled.div`
   display: flex;
-  align-items: center; /* Center links vertically */
-  margin-left: auto; /* Pushes links to the right */
+  align-items: center;
+  margin-left: auto;
   margin-right: 50px;
+
   a {
     color: #f5f5f5;
     text-decoration: none;
     font-size: 16px;
     font-weight: bold;
-    padding: 8px 15px; /* Adjust padding for better alignment */
+    padding: 8px 15px;
     transition: background 0.3s ease-in-out;
 
     &:hover {
       background: #52595d;
     }
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+      padding: 6px 10px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 12px;
+      padding: 4px 6px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin-right: 20px;
+  }
+
+  @media (max-width: 480px) {
+    display: none; /* Hide links on small screens for mobile menu */
   }
 `;
 
@@ -67,7 +105,7 @@ export const NavLinks = styled.div`
 export const UserProfile = styled.div`
   position: relative;
   display: flex;
-  align-items: center; /* Center avatar properly */
+  align-items: center;
   cursor: pointer;
   right: 15px;
 
@@ -77,6 +115,18 @@ export const UserProfile = styled.div`
     border-radius: 50%;
     object-fit: cover;
     border: 5px solid white;
+
+    @media (max-width: 768px) {
+      width: 35px;
+      height: 35px;
+      border: 4px solid white;
+    }
+
+    @media (max-width: 480px) {
+      width: 30px;
+      height: 30px;
+      border: 3px solid white;
+    }
   }
 `;
 
@@ -92,6 +142,11 @@ export const DropdownMenu = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px;
+
+  @media (max-width: 480px) {
+    width: 130px;
+    top: 45px;
+  }
 `;
 
 // Dropdown Items
@@ -105,5 +160,10 @@ export const DropdownItem = styled(Link)`
   &:hover {
     background: #f5f5f5;
     border-radius: 4px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+    padding: 6px 8px;
   }
 `;
