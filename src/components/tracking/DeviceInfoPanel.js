@@ -67,9 +67,27 @@ const DeviceInfoPanel = ({ deviceData }) => {
 
   const [isVisible, setIsVisible] = useState(true);
 
-  const handleClose = () => {
-    setIsVisible(false);
+  const panelRef = useRef();
+
+  const handleClickOutside = (event) => {
+    if (panelRef.current && !panelRef.current.contains(event.target)) {
+      setIsVisible(false);
+    }
   };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleEscKey = (event) => {
+    if (event.key === "Escape") setIsVisible(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscKey);
+    return () => document.removeEventListener("keydown", handleEscKey);
+  }, []);
 
   if (!deviceData || !deviceData.latestLocation) return null;
 
@@ -79,8 +97,16 @@ const DeviceInfoPanel = ({ deviceData }) => {
 
   return (
     <>
-      <ResponsivePanelContainer isVisible={isVisible}>
-        <CloseButton onClick={handleClose} aria-label="Close Panel">
+      <ResponsivePanelContainer
+        ref={panelRef}
+        isVisible={isVisible}
+        role="dialog"
+        aria-modal="true"
+      >
+        <CloseButton
+          onClick={() => setIsVisible(false)}
+          aria-label="Close Panel"
+        >
           &items;
         </CloseButton>
 
