@@ -129,13 +129,6 @@ const DeviceInfoPanel = ({ deviceData, isVisible, setIsVisible }) => {
           transition: " opacity 0.3s ease, transform 0.3s ease",
         }}
       >
-        <CloseButton
-          onClick={() => setIsVisible(false)}
-          aria-label="Close Panel"
-        >
-          close;
-        </CloseButton>
-
         <PanelHeader>DEVICE LOCATION DETAILS</PanelHeader>
         <PanelContent>
           <Section>

@@ -155,25 +155,3 @@ export const ViewMapButton = styled.button`
     padding: 12px;
   }
 `;
-
-export const CloseButton = styled.button`
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #555;
-  cursor: pointer;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background: #c0392b;
-  }
-
-  @media (max-width: 480px) {
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
-  }
-`;
