@@ -1,21 +1,33 @@
 import styled from "styled-components";
 import { FaChevronDown } from "react-icons/fa";
 
-export const PanelContainer = styled.div`
+export const ResponsivePanelContainer = styled.div`
   position: absolute;
   top: 72px;
   right: 20px;
-
-  width: 500px;
+  width: 90%;
+  max-width: 500px;
   background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border: 1px solid #ddd;
   border-radius: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  padding: 60px 30px;
-  max-height: 100vh;
+  padding: 60px 40px;
+  max-height: calc(100vh - 100px);
   overflow-y: auto;
   transition: all 0.3s ease-in-out;
-  z-index: 1001; /* Ensure it's above the map */
+  z-index: 1001;
+
+  @media (max-width: 768px) {
+    left: 5%;
+    right: 5%;
+    padding: 30px 20px;
+    width: 90%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 25px 16px;
+    font-size: 14px;
+  }
 `;
 
 export const PanelHeader = styled.div`
@@ -26,6 +38,10 @@ export const PanelHeader = styled.div`
   margin-bottom: 25px;
   text-transform: uppercase;
   letter-spacing: 1px;
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `;
 
 export const PanelContent = styled.div`
@@ -43,7 +59,10 @@ export const Section = styled.div`
   border-left: 4px solid #007bff;
   border-radius: 8px;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-  // margin-bottom: 10px;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 export const ExpandableSection = styled.div`
@@ -69,6 +88,10 @@ export const ExpandableButton = styled.button`
   &:hover {
     color: #0056b3;
   }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 export const ChevronIcon = styled(FaChevronDown)`
@@ -80,30 +103,7 @@ export const ChevronIcon = styled(FaChevronDown)`
 
 export const AccordionWrapper = styled.div`
   overflow: hidden;
-  transition: height 0.4 ease;
-`;
-
-export const ResponsivePanelContainer = styled.div`
-  position: absolute;
-  top: 72px;
-  right: 20px;
-  width: 90%;
-  max-width: 500px;
-  background: linear-gradient(135deg, #ffffff, #f8f9fa);
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  padding: 60px;
-  max-height: 100vh;
-  overflow-y: auto;
-  transition: all 0.3s ease-in out;
-  z-index: 1001;
-
-  @media (max-width: 768px) {
-    right: 10px;
-    left: 10px;
-    padding: 30px 20px;
-  }
+  transition: height 0.4s ease;
 `;
 
 export const BusinessList = styled.ul`
@@ -120,6 +120,10 @@ export const BusinessItem = styled.li`
   margin-bottom: 8px;
   border-radius: 6px;
   border-left: 3px solid #007bff;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 export const ViewMapButton = styled.button`
@@ -138,11 +142,9 @@ export const ViewMapButton = styled.button`
   &:hover {
     background-color: #0056b3;
   }
-`;
 
-export const AccordionContent = styled.div`
-  overflow: hidden;
-  max-height: ${({ isExpanded }) => (isExpanded ? "1000px" : "0")};
-  opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
-  transition: max-height 0.4s ease, opacity 0.3s ease;
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 12px;
+  }
 `;
