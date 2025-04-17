@@ -5,11 +5,10 @@ import { NavLink } from "react-router-dom";
 export const SidebarContainer = styled.div`
   width: ${(props) => (props.isCollapsed ? "60px" : "220px")};
   background-color: #29465b;
-  // height: calc(100vh - 140px); /* Adjusted for top navbar + bottom margin */
-  height:100vh
+  height: calc(100vh - 140px); /* Adjusted for top navbar + bottom margin */
   position: fixed;
   top: 80px;
-  left: ${(props) => (props.isMobileOpen ? "0" : "-250px")}
+  left: 25px;
   bottom: 60px;
   color: white;
   display: flex;
