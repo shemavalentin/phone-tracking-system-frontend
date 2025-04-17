@@ -69,25 +69,46 @@ const DeviceInfoPanel = ({ deviceData }) => {
 
   const panelRef = useRef();
 
-  const handleClickOutside = (event) => {
-    if (panelRef.current && !panelRef.current.contains(event.target)) {
-      setIsVisible(false);
-    }
-  };
-
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        setIsVisible(false);
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleEscKey = (event) => {
-    if (event.key === "Escape") setIsVisible(false);
-  };
-
+  // Close on Escape key
   useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === "Escape") setIsVisible(false);
+    };
     document.addEventListener("keydown", handleEscKey);
     return () => document.removeEventListener("keydown", handleEscKey);
   }, []);
+
+  if (!isVisible) {
+    return (
+      <button
+        onClick={() => setIsVisible(true)}
+        style={{
+          position: "fixed",
+          top: 20,
+          right: 20,
+          padding: "10px 20px",
+          zIndex: 999,
+          background: "#007bff",
+          color: "fff",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+        }}
+      >
+        Reopen Panel
+      </button>
+    );
+  }
 
   if (!deviceData || !deviceData.latestLocation) return null;
 
