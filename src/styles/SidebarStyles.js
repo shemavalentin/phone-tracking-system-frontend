@@ -5,7 +5,8 @@ import { NavLink } from "react-router-dom";
 export const SidebarContainer = styled.div`
   width: ${(props) => (props.isCollapsed ? "60px" : "220px")};
   background-color: #29465b;
-  height: 100vh;
+  // height: calc(100vh - 140px); /* Adjusted for top navbar + bottom margin */
+  height:100vh
   position: fixed;
   top: 80px;
   left: ${(props) => (props.isMobileOpen ? "0" : "-250px")};
@@ -13,14 +14,13 @@ export const SidebarContainer = styled.div`
   color: white;
   display: flex;
   flex-direction: column;
-  transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
+  transition: width 0.3s ease-in-out;
   padding-top: 10px;
   z-index: 1001;
   box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2);
 
   @media (max-width: 769px) {
-    left: 25px;
-  }
+   left:25px;
 `;
 
 // Sidebar Header
@@ -153,26 +153,5 @@ export const ExpandableButton = styled.div`
   @media (max-width: 480px) {
     padding: 8px 12px;
     font-size: 14px;
-  }
-`;
-
-// Backdrop overlay for mobile
-export const Backdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-in-out;
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
   }
 `;
