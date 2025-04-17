@@ -24,12 +24,11 @@ import {
   ExpandableButton,
 } from "../../styles/SidebarStyles";
 
-const Sidebar = ({ isCollapsed, toggleSidebar }) => {
+const Sidebar = ({ isCollapsed, toggleSidebar, isMobileOpen }) => {
   const [isTrackingOpen, setIsTrackingOpen] = useState(true);
 
   return (
-    <SidebarContainer isCollapsed={isCollapsed}>
-      {/* Sidebar Header with Toggle Button */}
+    <SidebarContainer isCollapsed={isCollapsed} isMobileOpen={isMobileOpen}>
       <SidebarHeader>
         <HeaderContent>
           <ToggleButton onClick={toggleSidebar}>
@@ -39,7 +38,6 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         </HeaderContent>
       </SidebarHeader>
 
-      {/* Sidebar Menu */}
       <SidebarMenu>
         <SidebarItem to="/" activeClassName="active">
           <SidebarIcon>
@@ -62,7 +60,6 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           {!isCollapsed && "Tracked Devices"}
         </SidebarItem>
 
-        {/* Expandable Section for Tracking */}
         <ExpandableButton onClick={() => setIsTrackingOpen(!isTrackingOpen)}>
           <SidebarIcon>
             <MapIcon />
