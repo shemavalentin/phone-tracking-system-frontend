@@ -9,8 +9,8 @@ export const SidebarContainer = styled.div`
   height:100vh
   position: fixed;
   top: 80px;
-  left: ${(props) => (props.isMobileOpen ? "0" : "-250px")};
-  bottom: 0px;
+  left: ${(props) => (props.isMobileOpen ? "0" : "-250px")}
+  bottom: 60px;
   color: white;
   display: flex;
   flex-direction: column;
@@ -19,8 +19,20 @@ export const SidebarContainer = styled.div`
   z-index: 1001;
   box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2);
 
-  @media (max-width: 769px) {
-   left:25px;
+  @media (max-width: 768px) {
+    position: absolute;
+    top: 60px;
+    left: ${(props) => (props.isMobileOpen ? "0" : "-220px")};
+    width: 220px;
+    transition: left 0.3s ease-in-out;
+    height: calc(100vh - 60px);
+    box-shadow: ${(props) =>
+      props.isMobileOpen ? "3px 0 5px rgba(0, 0, 0, 0.3)" : "none"};
+  }
+
+  @media (max-width: 480px) {
+    width: 200px;
+  }
 `;
 
 // Sidebar Header
