@@ -57,14 +57,14 @@ export const PanelContent = styled.div`
   flex-direction: column;
   gap: 14px;
 
-  @media (max-width: 480px) {
-    position: fixed;
-    bottom: 0;
-    top: auto;
-    height: 80vh;
-    border-radius: 20px 20px 0 0;
-    overflow-y: auto;
-  }
+  // @media (max-width: 480px) {
+  //   position: fixed;
+  //   bottom: 0;
+  //   top: auto;
+  //   height: 80vh;
+  //   border-radius: 20px 20px 0 0;
+  //   overflow-y: auto;
+  // }
 `;
 
 export const Section = styled.div`
