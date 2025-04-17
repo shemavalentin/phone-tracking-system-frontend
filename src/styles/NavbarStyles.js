@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 
-// Navbar wrapper container
+// Navbar Wrapper
 export const NavbarWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -12,7 +12,7 @@ export const NavbarWrapper = styled.div`
   z-index: 1002;
 `;
 
-// AppBar (main navbar area)
+// Styled AppBar
 export const StyledAppBar = styled(AppBar)`
   border-radius: 10px;
   max-width: 1490px;
@@ -25,13 +25,6 @@ export const StyledAppBar = styled(AppBar)`
   align-items: center;
   background-color: #1a237e !important;
 
-  z-index: 1200; /* above sidebar*/
-
-  @media (max-width: 1024px) {
-    width: 98%;
-    margin-right: 10px;
-  }
-
   @media (max-width: 768px) {
     width: 100%;
     margin: 0;
@@ -40,11 +33,11 @@ export const StyledAppBar = styled(AppBar)`
   }
 
   @media (max-width: 480px) {
-    height: 55px;
+    height: 50px;
   }
 `;
 
-// Toolbar (content wrapper inside navbar)
+// Styled Toolbar
 export const StyledToolbar = styled(Toolbar)`
   display: flex;
   justify-content: space-between;
@@ -53,31 +46,23 @@ export const StyledToolbar = styled(Toolbar)`
   height: 100%;
   padding: 0 20px;
 
-  @media (max-width: 768px) {
-    padding: 0 15px;
-  }
-
   @media (max-width: 480px) {
     padding: 0 10px;
   }
 `;
 
-// Logo image
+// Logo
 export const Logo = styled.img`
   height: 40px;
   width: auto;
   cursor: pointer;
-
-  @media (max-width: 768px) {
-    height: 35px;
-  }
 
   @media (max-width: 480px) {
     height: 30px;
   }
 `;
 
-// Nav links (desktop only; hidden on mobile)
+// Navigation Links
 export const NavLinks = styled.div`
   display: flex;
   align-items: center;
@@ -112,11 +97,11 @@ export const NavLinks = styled.div`
   }
 
   @media (max-width: 480px) {
-    display: none; // Hide on mobile — prepare for hamburger menu
+    display: none; /* Hide links on small screens for mobile menu */
   }
 `;
 
-// User profile with avatar (clickable)
+// User Profile (Avatar + Dropdown)
 export const UserProfile = styled.div`
   position: relative;
   display: flex;
@@ -145,7 +130,7 @@ export const UserProfile = styled.div`
   }
 `;
 
-// Dropdown menu (on avatar click)
+// Dropdown Menu
 export const DropdownMenu = styled.div`
   position: absolute;
   top: 50px;
@@ -164,7 +149,7 @@ export const DropdownMenu = styled.div`
   }
 `;
 
-// Dropdown items inside the menu
+// Dropdown Items
 export const DropdownItem = styled(Link)`
   color: #1a237e;
   text-decoration: none;
@@ -180,18 +165,5 @@ export const DropdownItem = styled(Link)`
   @media (max-width: 480px) {
     font-size: 13px;
     padding: 6px 8px;
-  }
-`;
-
-export const ToggleMenuButton = styled.button`
-  display: none;
-  background: noen;
-  border: none;
-  color: #ffffff;
-  font-size: 26px;
-  cursor: pointer;
-
-  @media (max-width: 768px) {
-    display: block;
   }
 `;
